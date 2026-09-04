@@ -1,0 +1,19 @@
+/* Barevné tokeny – ZELENÁ varianta */
+:root{
+  --bg:#F7F2FA;
+  --surface:#FFFFFF;
+  --ink:#2A2233;
+  --ink-muted:#6E6478;
+  --ink-faint:#9C93A6;
+  --violet:#7B3A96;
+  --violet-dark:#5C2A73;
+  --violet-tint:#F3EAF8;
+  --magenta:#D6297D;
+  --green:#5E7A46;
+  --green-tint:#F1F5EC;
+  --line:#EBE0F0;
+  --line-soft:#F5EFF8;
+  /* gradienty ze zadání */
+  --grad-add:linear-gradient(135deg,#6FA35C 0%,#7FB06B 25%,#9CC97F 50%,#C4DFA0 100%);
+  --grad-cta:linear-gradient(90deg,#6FA35C 0%,#7FB06B 25%,#9CC97F 50%,#C4DFA0 100%);
+}
