@@ -1,0 +1,160 @@
+/* Varianta "Už nic nechci" — možnost rovnou odmítnout nabídku
+   doplňkových produktů, ať se lidé necítí dotlačovaní k nákupu. */
+
+.decline-offer{
+  margin:10px 0 0;
+  text-align:center;
+}
+
+/* Tlačítko "Nechci" je součástí karty "Mňau tip" — sedí vpravo
+   nahoře vedle textu, ne jako vlastní karta ani na novém řádku. */
+.tip{
+  align-items:flex-start;
+}
+.tip .decline-offer{
+  flex:0 0 auto;
+  margin:0 0 0 auto;
+}
+/* Stejný styl jako tlačítko "Upravit" (.edit-btn) v horním pruhu. */
+.decline-btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  height:46px;
+  padding:0 18px;
+  border:1.5px solid var(--line);
+  border-radius:999px;
+  background:var(--surface);
+  color:var(--violet);
+  font-family:'Poppins',system-ui,sans-serif;
+  font-size:.75rem;font-weight:600;
+  cursor:pointer;
+  transition:border-color .16s ease,background .16s ease,transform .12s ease;
+}
+.decline-btn:hover{
+  border-color:var(--violet);
+  background:var(--violet-tint);
+}
+.decline-btn:active{
+  transform:scale(.96);
+}
+
+/* "Chci" — stejná proměnná gradientu jako tlačítko košíku
+   (.item .add), ať vypadá jako pozitivní/aktivní akce. */
+#showAgainBtn{
+  border:0;
+  background-image:linear-gradient(rgba(255,255,255,.40),rgba(255,255,255,.40)),var(--grad-cta);
+  color:#fff;
+  text-shadow:0 1px 2px rgba(120,60,140,.20);
+}
+#showAgainBtn:hover{
+  background-image:var(--grad-cta);
+  color:#fff;
+  text-shadow:none;
+}
+
+/* "Zpět do obchodu" — vlastní gradient A64BC6 → D362B6. */
+.decline-shop-link{
+  border:0;
+  background-image:linear-gradient(90deg,#A64BC6 0%,#D362B6 100%);
+  color:#fff;
+  text-shadow:0 1px 2px rgba(120,60,140,.20);
+}
+.decline-shop-link:hover{
+  filter:brightness(1.05);
+  text-shadow:none;
+}
+
+/* Stav po kliknutí — nahradí nabídku i příběh. Kočka jako velký
+   obrázek vlevo (svisle na střed), text a tlačítko vpravo. */
+.decline-done{
+  position:relative;
+  overflow:hidden;
+  margin-top:14px;
+  padding:18px 16px;
+  background:linear-gradient(135deg,#F7F2FC 0%,#F0E7F900 100%);
+  border:0;
+  box-shadow:0 4px 16px rgba(74,44,102,.08);
+  border-radius:24px;
+  display:flex;
+  align-items:center;
+  gap:14px;
+  text-align:left;
+}
+.decline-done .mascot--tip{
+  position:relative;
+  z-index:1;
+  flex:0 0 auto;
+  width:38%;
+  max-width:150px;
+  height:auto;
+  margin-bottom:0;
+}
+.decline-done-copy{
+  position:relative;
+  z-index:1;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:6px;
+  min-width:0;
+}
+.decline-done strong{
+  font-family:'Poppins',system-ui,sans-serif;
+  font-size:1.08rem;
+  font-weight:800;
+  line-height:1.2;
+  color:#241B3D;
+}
+.decline-done span{
+  font-size:.82rem;
+  line-height:1.4;
+  color:var(--ink-muted);
+  max-width:26ch;
+}
+.decline-shop-link{
+  margin-top:6px;
+  width:100%;
+  padding:0 16px;
+}
+
+/* Roztroušené tlapky na pozadí karty — dekorace, různé velikosti
+   a průhlednost po celé ploše, jako v referenci. */
+.decline-paw{
+  position:absolute;
+  z-index:0;
+  color:var(--violet);
+  pointer-events:none;
+}
+.decline-paw-1{width:22px;height:22px;top:8px;left:10px;opacity:.18;transform:rotate(-18deg);}
+.decline-paw-2{width:14px;height:14px;bottom:10px;left:6px;opacity:.14;transform:rotate(12deg);}
+.decline-paw-3{width:16px;height:16px;top:10px;right:14px;opacity:.16;transform:rotate(20deg);}
+.decline-paw-4{width:18px;height:18px;bottom:8px;right:10px;opacity:.2;transform:rotate(-8deg);}
+.decline-paw-5{width:12px;height:12px;top:44%;left:34%;opacity:.1;transform:rotate(6deg);}
+
+/* Desktop verze: větší kočka, text zarovnaný doprava. */
+@media (min-width:640px){
+  .decline-done{
+    max-width:720px;
+    margin-left:auto;
+    margin-right:auto;
+    padding:24px 28px;
+    justify-content:space-between;
+  }
+  .decline-done .mascot--tip{
+    width:46%;
+    max-width:230px;
+  }
+  .decline-done-copy{
+    align-items:flex-end;
+    text-align:right;
+  }
+  .decline-done strong{
+    font-size:1.32rem;
+  }
+  .decline-done span{
+    font-size:.92rem;
+    max-width:32ch;
+  }
+  .decline-shop-link{
+    width:auto;
+  }
+}

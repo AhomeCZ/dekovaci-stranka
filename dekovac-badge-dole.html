@@ -10,6 +10,7 @@
 
 <link rel="stylesheet" href="theme-violet.css">
 <link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="badge-bottom.css">
 </head>
 <body>
 
@@ -489,12 +490,13 @@ products.forEach((item, i) => {
   li.innerHTML =
     '<button class="thumb" type="button" aria-label="Zobrazit detail: ' + item.n + '">' +
       '<img src="' + photos[i % photos.length] + '" alt="' + item.n + '" loading="lazy">' +
-      (item.o > item.p ? '<span class="badge">\u2212' + Math.round((1 - item.p / item.o) * 100) + '\u00A0%</span>' : '') +
     '</button>' +
     '<div class="item-body">' +
       '<p class="name">' + item.n + '</p>' +
     '</div>' +
-    '<div class="prices"><span class="price-old">' + item.o + ' Kč</span>' +
+    '<div class="prices">' +
+    (item.o > item.p ? '<span class="badge">−' + Math.round((1 - item.p / item.o) * 100) + ' %</span>' : '') +
+    '<span class="price-old">' + item.o + ' Kč</span>' +
     '<span class="price">' + item.p + ' Kč</span></div>' +
     '<button class="add" type="button" aria-pressed="false" aria-label="Přidat do košíku">' +
       '<svg class="add-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-plus"/></svg>' +

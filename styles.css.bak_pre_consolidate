@@ -280,6 +280,8 @@ button,input{font:inherit;color:inherit;}
   margin-top:var(--s8);background:var(--surface);
   border:1px solid var(--line);border-radius:var(--r-md);overflow:hidden;
 }
+.story-img{aspect-ratio:16/9;background:#EFE9E1;display:grid;place-items:center;color:#B9AC9B;overflow:hidden;}
+.story-img img{width:100%;height:100%;object-fit:cover;}
 .story-copy{padding:var(--s4);}
 .story-copy h3{margin:0 0 var(--s2);font-size:1rem;font-weight:700;}
 .story-copy p{margin:0;font-size:.875rem;color:var(--ink-muted);max-width:56ch;}
@@ -395,6 +397,8 @@ button,input{font:inherit;color:inherit;}
   .add[aria-pressed="true"]{padding:calc(var(--s2) - 1px) calc(var(--s3) - 1px);}
   .section-head h2{font-size:1.375rem;}
   .doodle{display:block;}
+  .story{display:grid;grid-template-columns:minmax(0,42%) 1fr;align-items:center;}
+  .story-img{height:100%;aspect-ratio:auto;min-height:200px;}
   .story-copy{padding:var(--s6);}
   .summary .mascot--bar{width:104px;top:-64px;left:8px;}
 }
@@ -429,6 +433,8 @@ button,input{font:inherit;color:inherit;}
   .total strong{font-size:1.75rem;}
   .cta{width:auto;flex:0 0 auto;margin-top:0;padding:var(--s3) var(--s8);font-size:1rem;}
 
+  .story{grid-template-columns:minmax(0,46%) 1fr;}
+  .story-img{min-height:260px;}
   .story-copy{padding:var(--s8);}
   .story-copy h3{font-size:1.25rem;}
   .story-copy p{font-size:.9375rem;}
@@ -810,13 +816,10 @@ body{
 /* kočka letí NAD lištou vpravo — mimo tok, aby netlačila text ani pilulku */
 .summary-inner{position:relative;}
 .cat-fx{
-  position:absolute;
-  right:6px;
-  bottom:100%;
-  width:150px;
-  margin:0 0 -18px;
-  pointer-events:none;
-  z-index:3;
+  position:absolute;right:6px;bottom:100%;
+  width:150px;margin:0 0 -18px;
+  pointer-events:none;z-index:3;
+  filter:drop-shadow(0 6px 18px rgba(138,103,183,.35)) drop-shadow(0 2px 4px rgba(43,37,48,.12));
 }
 @media (min-width:640px){ .cat-fx{width:200px;right:12px;} }
 @media (min-width:1024px){ .cat-fx{width:240px;right:20px;} }
@@ -2356,7 +2359,7 @@ body{
 .tip-copy strong{font-size:1.15rem;}
 .price{font-weight:600;color:var(--ink);}
 .price-old{color:var(--ink-faint);text-decoration:line-through;}
-.total strong{color: linear-gradient(180deg,rgba(255,255,255,.40) 0%,rgba(153,153,153,0) 100%);}
+.total strong{color:var(--magenta);}
 
 /* --- Potvrzení objednávky: bílá karta se šalvějovým proužkem --- */
 .confirm{
@@ -3334,7 +3337,7 @@ html,body,button,input,select,textarea,
 html .tip,
 html[data-palette] .tip,
 html[data-palette="custom"] .tip{
-  background: linear-gradient(135deg, #F7F2FC 0%, #f0e7f900 100%) !important;
+  background: #f7f1fa !important;
   border-color:#EFE4F7;
 }
 html .tip:hover,
@@ -3442,14 +3445,12 @@ html[data-mascot="super"] .tip .mascot--tip{animation-duration:1.6s;}
 @media (max-width:639px){
   .item .add,
   .item .add[aria-pressed="true"]{
-    width: 34px !important;
-    min-width: 3.5em;
-    height: 3.5em !important;
+    width:64px !important;min-width:64px;
+    height:60px !important;min-height:60px !important;
     border-radius:18px;
     padding:0 !important;
     justify-self:end;
-    position:relative;
-    overflow:visible;
+    position:relative;overflow:visible;
   }
   .item .add .add-icon,
   .item .add .add-label{display:none !important;}
@@ -3715,6 +3716,13 @@ html[data-palette] .item{border-radius:14px;}
 :root{
   --bg:#FFFFFF !important;
 }
+body{
+  /* background:linear-gradient(180deg,#FFFFFF 0%,#FBF8FE 45%,#F3EAFA 100%) !important; */
+}
+.tip{
+  background:#F6F2F9 !important;
+}
+
 /* Výraznější stín pod kartami produktů, bez ohraničení —
    kartu odděluje od pozadí jen stín, ne linka kolem. */
 .item{
@@ -3749,14 +3757,4 @@ html[data-palette] .item{border-radius:14px;}
 /* Větší mezera mezi horním pruhem a kartou "Mňau tip". */
 .tip{
   margin-top:16px;
-}
-
-/* Hierarchie v souhrnné liště dole: odpočet a nadpis "Krabička je
-   otevřená" byly stejně velké jako cena (1.55rem), takže si
-   konkurovaly. Cena zůstává hlavní, tohle je jen doplňkový popisek. */
-.summary-note strong{
-  font-size:1.05rem !important;
-}
-.timer-face .clock{
-  font-size:1.1rem !important;
 }

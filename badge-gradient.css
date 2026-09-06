@@ -1,0 +1,9 @@
+/* Varianta: slevový štítek s gradientem místo plné barvy —
+   sytá červeno-oranžová, oba konce dost tmavé na čitelný bílý text
+   (světlý broskvový konec z předchozí verze měl slabý kontrast). */
+.badge{
+  background:linear-gradient(135deg,#E63946 0%,#F3722C 100%);
+  box-shadow:0 2px 6px rgba(230,57,70,.35);
+  font-weight:800;
+  letter-spacing:.04em;
+}

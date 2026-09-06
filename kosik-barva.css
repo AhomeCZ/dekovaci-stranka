@@ -1,0 +1,22 @@
+/* Varianta "košík — jiná barva": tlačítko přidat do košíku má
+   místo tučného růžovo-fialového gradientu jemné světlé pozadí,
+   ikonka košíku je barevná místo bílé. */
+.item .add,
+.item .add[aria-pressed="true"],
+.item .add:hover{
+  background-image:linear-gradient(135deg,#F7F2FC 0%,#F0E7F900 100%) !important;
+  color:#A716BE !important;
+  text-shadow:none !important;
+  box-shadow:0 2px 8px rgba(74,44,102,.10) !important;
+}
+.item .add .add-icon,
+.item .add .add-cart{
+  color:#A716BE !important;
+}
+
+/* Kroužek s počtem kusů byl poloprůhledný bílý — na světlém pozadí
+   splýval a nešlo přečíst číslo uvnitř. Plná barva místo průhlednosti. */
+.item .add-count{
+  background:#A716BE !important;
+  color:#fff !important;
+}

@@ -1,0 +1,8 @@
+/* Varianta: jiná barva slevového štítku — teplá oranžová místo
+   růžové, drží se stejné pozice v cenovém bloku jako badge-bottom.css. */
+.badge{
+  background:#FF7A3D;
+  box-shadow:0 2px 6px rgba(255,122,61,.32);
+  font-weight:800;
+  letter-spacing:0;
+}

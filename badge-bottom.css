@@ -1,0 +1,33 @@
+/* Varianta: slevový štítek v cenovém sloupci — "-63 %" nad
+   přeškrtnutou a novou cenou, ne přes fotku. */
+.badge{
+  position:static;
+  order:0;
+  margin-bottom:6px;
+}
+
+/* Víc vzduchu mezi jednotlivými řádky (badge / stará cena / nová
+   cena), ať to nepůsobí slepené dohromady. Bez margin-top:16px ze
+   sdíleného styles.css — tady to díky badge nahoře nepotřebujeme. */
+.item .prices{
+  gap:4px;
+  margin-top:0;
+}
+.price-old{
+  margin-top:2px;
+}
+
+/* Tlačítko košíku dole vpravo, ne vycentrované na výšku ceny. */
+.item .add,
+.item .add[aria-pressed="true"]{
+  align-self:end;
+  justify-self:end;
+}
+
+/* Větší tlačítko košíku. */
+.item .add,
+.item .add[aria-pressed="true"]{
+  width:74px !important;min-width:74px;
+  height:70px !important;min-height:70px;
+}
+.item .add .add-cart{width:32px;height:32px;}

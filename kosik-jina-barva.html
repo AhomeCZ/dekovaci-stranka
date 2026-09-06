@@ -10,6 +10,9 @@
 
 <link rel="stylesheet" href="theme-violet.css">
 <link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="no-badge.css">
+<link rel="stylesheet" href="uznic.css">
+<link rel="stylesheet" href="kosik-barva.css">
 </head>
 <body>
 
@@ -88,10 +91,34 @@
       <strong>Mňau tip <svg class="heading-paw" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#i-paw"/></svg></strong>
       <span>Vejde se tam ještě něco. Přibalíme?</span>
     </span>
+    <!-- 3a ▸ ODMÍTNUTÍ NABÍDKY -->
+    <p class="decline-offer" id="declineOfferWrap">
+      <button class="decline-btn" id="declineBtn" type="button">Nechci</button>
+    </p>
+    <!-- 3b ▸ NÁVRAT K NABÍDCE (skryté, dokud nekliknete na Nechci) -->
+    <p class="decline-offer" id="showAgainWrap" hidden>
+      <button class="decline-btn" id="showAgainBtn" type="button">Chci</button>
+    </p>
+  </div>
+
+  <!-- 3c ▸ STAV PO ODMÍTNUTÍ (skryté, dokud nekliknete výš) -->
+  <div id="declineResult" hidden>
+    <div class="decline-done" id="declineDone">
+
+
+
+
+      <img class="mascot mascot--tip" src="assets/krabicka.png" alt="">
+      <div class="decline-done-copy">
+        <strong>V pořádku, nic dalšího nepřibalujeme 🐾</strong>
+        <span>Objednávku už pro vás chystáme, brzy vyrazí na cestu. Díky, že nakupujete u nás!</span>
+        <a class="decline-btn decline-shop-link" href="#">← Zpět do obchodu</a>
+      </div>
+    </div>
   </div>
 
   <!-- 3 ▸ NABÍDKA -->
-  <section class="offer">
+  <section class="offer" id="offerSection">
     <div class="section-head">
       <div class="tile"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#i-paw"/></svg></div>
       <div class="head-copy">
@@ -110,7 +137,7 @@
   </section>
 
   <!-- 4 ▸ PŘÍBĚH -->
-  <section class="story">
+  <section class="story" id="storySection">
     <div class="story-copy">
       <h3>Balíme v Brně, ručně</h3>
       <p>Každý dárek chystáme v naší dílně. Děkujeme, že podporujete poctivou českou tvorbu — jedeme v tom s vámi.</p>
@@ -798,6 +825,33 @@ addEventListener('keydown', e => {
   root.setAttribute('data-art', grad.art ? '1' : '0');
   applyGradient();
 })();
+</script>
+
+<!-- "Už nic nechci" — odmítnutí nabídky -->
+<script>
+document.getElementById('declineBtn').addEventListener('click', () => {
+  document.getElementById('declineOfferWrap').hidden = true;
+  document.getElementById('showAgainWrap').hidden = false;
+  document.getElementById('offerSection').hidden = true;
+  document.getElementById('storySection').hidden = true;
+  document.getElementById('summary').hidden = true;
+  document.getElementById('declineResult').hidden = false;
+
+  /* Poznámka pro reálnou implementaci na Shoptetu:
+     tady se má podle způsobu platby rozhodnout, co se ukáže dál —
+     u platby kartou rovnou QR/potvrzení plateb. u dobírky jen tenhle
+     text bez QR (nic se nedoplácí). Tenhle prototyp platební metodu
+     nezná, proto se vždy zobrazí jen text bez QR. */
+});
+
+document.getElementById('showAgainBtn').addEventListener('click', () => {
+  document.getElementById('declineResult').hidden = true;
+  document.getElementById('showAgainWrap').hidden = true;
+  document.getElementById('declineOfferWrap').hidden = false;
+  document.getElementById('offerSection').hidden = false;
+  document.getElementById('storySection').hidden = false;
+  document.getElementById('summary').hidden = false;
+});
 </script>
 </body>
 </html>

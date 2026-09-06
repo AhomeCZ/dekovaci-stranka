@@ -1,0 +1,16 @@
+/* Varianta "Objednávka je přijata" — objednávka ještě čeká na dokončení
+   (viz "Uzavřít objednávku" v souhrnu), takže potvrzení nesmí vypadat
+   jako u zaplacené objednávky. Zelená (=hotovo/zaplaceno) nahrazená
+   modrou (=přijato, čeká se na dokončení). Platí jen pro tuto stránku. */
+html[data-palette="custom"]{
+  --palette-confirm:#EEF3FC;
+  --palette-confirm-line:#D6E3F7;
+  --palette-confirm-ink:#25478F;
+}
+.confirm-check{
+  background:#3B6FE0;
+  box-shadow:0 0 0 5px rgba(59,111,224,.14);
+}
+@media (max-width:359px){
+  .confirm-check{box-shadow:0 0 0 4px rgba(59,111,224,.14);}
+}
