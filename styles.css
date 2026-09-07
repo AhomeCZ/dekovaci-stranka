@@ -3760,3 +3760,10 @@ html[data-palette] .item{border-radius:14px;}
 .timer-face .clock{
   font-size:1.1rem !important;
 }
+
+/* Kliknutí na odkazy/tlačítka (typicky "Zpět do obchodu") na mobilu
+   krátce "zbělalo" — to je výchozí tap-highlight prohlížeče na <a>
+   a tlačítkách. Vypnuto globálně pro všechny varianty stránky. */
+a,button{
+  -webkit-tap-highlight-color:transparent;
+}

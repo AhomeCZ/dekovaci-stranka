@@ -12,6 +12,26 @@
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="no-badge.css">
 <link rel="stylesheet" href="uznic.css">
+<link rel="stylesheet" href="obj-prijata.css">
+<link rel="stylesheet" href="prevodem.css">
+
+<!-- Přepínač barevných variant pro A/B test.
+     Bez parametru = výchozí růžová (varianta A).
+     ?theme=zelena přilinkuje theme-zelena.css + theme-zelena.js (varianta B). -->
+<script>
+(function(){
+  const name = new URLSearchParams(location.search).get('theme');
+  if (!name || !/^[a-z0-9-]+$/.test(name)) return;
+  const css = document.createElement('link');
+  css.rel = 'stylesheet';
+  css.href = 'theme-' + name + '.css';
+  document.head.appendChild(css);
+  const js = document.createElement('script');
+  js.src = 'theme-' + name + '.js';
+  js.defer = true;
+  document.head.appendChild(js);
+})();
+</script>
 </head>
 <body>
 
@@ -62,7 +82,7 @@
     <span class="confirm-check" aria-hidden="true">
       <svg viewBox="0 0 24 24" fill="none"><path d="M6.5 12.4l3.6 3.6L18 8.2" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </span>
-    <h1>Objednávka je zaplacená</h1>
+    <h1>Objednávka je přijata</h1>
     <p class="confirm-mail">
       <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="#i-mail"/></svg>
       <span><span id="mailText">jana.novakova@email.cz</span></span>
@@ -87,8 +107,8 @@
     <svg class="tip-paw" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#i-paw"/></svg>
     <svg class="tip-watermark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#i-paw"/></svg>
     <span class="tip-copy">
-      <strong>Mňau tip <svg class="heading-paw" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#i-paw"/></svg></strong>
-      <span>Vejde se tam ještě něco. Přibalíme?</span>
+      <strong>Mňau tip: Přibalit? <svg class="heading-paw" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#i-paw"/></svg></strong>
+      <span>Vejde se tam ještě něco!</span>
     </span>
     <!-- 3a ▸ ODMÍTNUTÍ NABÍDKY -->
     <p class="decline-offer" id="declineOfferWrap">
@@ -109,11 +129,36 @@
 
       <img class="mascot mascot--tip" src="assets/krabicka.png" alt="">
       <div class="decline-done-copy">
-        <strong>V pořádku, nic dalšího nepřibalujeme 🐾</strong>
+        <strong id="declineHeadline">V pořádku, nic dalšího nepřibalujeme 🐾</strong>
         <span>Objednávku už pro vás chystáme, brzy vyrazí na cestu. Díky, že nakupujete u nás!</span>
         <a class="decline-btn decline-shop-link" href="#">← Zpět do obchodu</a>
       </div>
     </div>
+
+    <!-- 3d ▸ PLATBA PŘEVODEM — objednávka čeká na úhradu, proto QR
+         a platební údaje rovnou tady, ať se nemusí hledat v e-mailu. -->
+    <section class="payment-card">
+      <h2>Ještě zbývá zaplatit převodem</h2>
+      <p class="payment-note">Naskenujte QR kód v mobilní bance, nebo zadejte platbu ručně podle údajů níže. Jakmile platba dorazí, objednávku zabalíme a vypravíme.</p>
+
+      <div class="payment-card-pay">
+        <div class="qr" id="paymentQr"></div>
+        <dl class="pay-rows">
+          <div><dt>Číslo účtu</dt><dd>2701234567/2010</dd></div>
+          <div><dt>Variabilní symbol</dt><dd>1415697</dd></div>
+          <div><dt>Částka</dt><dd id="payAmount">1 490 Kč</dd></div>
+          <div><dt>Splatnost</dt><dd>do 3 dnů</dd></div>
+        </dl>
+      </div>
+
+      <p class="payment-hint">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <path d="M4 7.5h16v11H4z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+          <path d="M4 11h16" stroke="currentColor" stroke-width="1.7"/>
+        </svg>
+        Platební údaje jsme vám zároveň poslali e-mailem.
+      </p>
+    </section>
   </div>
 
   <!-- 3 ▸ NABÍDKA -->
@@ -180,7 +225,7 @@
         </div>
       </div>
       <button class="cta" id="cta" type="button">
-        <span id="ctaText">Doplatit 0 Kč</span>
+        <span id="ctaText">Uzavřít objednávku 0 Kč</span>
         <svg aria-hidden="true"><use href="#i-chev"/></svg>
       </button>
     </div>
@@ -188,28 +233,8 @@
 
 </main>
 
-<!-- QR PLATBA -->
-<div class="backdrop" id="backdrop" hidden>
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="qrTitle">
-    <button class="modal-x" id="qrX" type="button" aria-label="Zavřít">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
-      </svg>
-    </button>
-    <h2 id="qrTitle">Ještě doplatek a balíme</h2>
-    <p class="sub">Načtěte kód v aplikaci své banky. Jakmile platba dorazí, věci přibalíme do krabičky.</p>
-
-    <div class="qr" id="qrBox"></div>
-
-    <dl class="pay-rows">
-      <div><dt>Částka</dt><dd id="qrAmount">0 Kč</dd></div>
-      <div><dt>Variabilní symbol</dt><dd>1415697</dd></div>
-      <div><dt>Zaplatit do</dt><dd id="qrDeadline">14:58</dd></div>
-    </dl>
-
-    <button class="modal-close" id="qrClose" type="button">Zavřít</button>
-  </div>
-</div>
+<!-- QR platba tady NENÍ jako pop-up — v této variantě je QR i platební
+     údaje natvrdo v děkovací kartě (.payment-card) uvnitř stránky. -->
 
 <!-- DETAIL PRODUKTU -->
 <div class="backdrop" id="productBackdrop" hidden>
@@ -391,7 +416,7 @@ function refresh(){
   count = [...cart.values()].reduce((sum, qty) => sum + qty, 0);
   total = [...cart.entries()].reduce((sum, [index, qty]) => sum + products[index].p * qty, 0);
   totalEl.textContent = total + ' Kč';
-  ctaText.textContent = 'Doplatit ' + total + ' Kč';
+  ctaText.textContent = 'Uzavřít objednávku ' + total + ' Kč';
   summary.dataset.state = count ? 'filled' : 'empty';
   summaryToggle.hidden = !count;
   summaryToggle.setAttribute('aria-expanded', String(expanded && !!count));
@@ -642,11 +667,8 @@ setInterval(() => {
   }
 }, 1000);
 
-/* ---------- QR platba ---------- */
-const backdrop   = document.getElementById('backdrop');
-const qrBox      = document.getElementById('qrBox');
-const qrAmount   = document.getElementById('qrAmount');
-const qrDeadline = document.getElementById('qrDeadline');
+/* ---------- QR platba (inline v děkovací kartě, ne pop-up) ---------- */
+const qrBox = document.getElementById('paymentQr');
 
 /* náhodný kód v QR podobě — pro prototyp, ne skutečná platební data */
 function drawQR(){
@@ -682,27 +704,28 @@ function drawQR(){
     '<path d="' + path + '" fill="#1E1726"/></svg>';
 }
 
-function openQR(){
-  if (!count) return;
-  drawQR();
-  qrAmount.textContent = total + ' Kč';
-  qrDeadline.textContent = clock.textContent;
-  backdrop.hidden = false;
-  document.body.style.overflow = 'hidden';
-  document.getElementById('qrClose').focus();
-}
-function closeQR(){
-  backdrop.hidden = true;
-  document.body.style.overflow = '';
-}
+drawQR();
 
-document.getElementById('cta').addEventListener('click', openQR);
-document.getElementById('qrClose').addEventListener('click', closeQR);
-document.getElementById('qrX').addEventListener('click', closeQR);
-backdrop.addEventListener('click', e => { if (e.target === backdrop) closeQR(); });
+/* Cena samotné objednávky (prototyp) — doplňky se k ní přičtou,
+   platí se vším všudy jedním převodem. */
+const ORDER_TOTAL = 1490;
+const payAmount = document.getElementById('payAmount');
+function updatePayAmount(){
+  payAmount.textContent = (ORDER_TOTAL + total).toLocaleString('cs-CZ') + ' Kč';
+}
+updatePayAmount();
+
+/* "Uzavřít objednávku" — žádné okno navíc, jen se ukáže děkovací
+   karta s QR a platebními údaji (stejné místo jako po "Nechci"). */
+document.getElementById('cta').addEventListener('click', () => {
+  updatePayAmount();
+  showThanks(count
+    ? 'Přibalíme to k objednávce 🐾'
+    : 'V pořádku, nic dalšího nepřibalujeme 🐾');
+});
+
 addEventListener('keydown', e => {
   if (e.key !== 'Escape') return;
-  if (!backdrop.hidden) closeQR();
   if (!productBackdrop.hidden) closeProduct();
 });
 </script>
@@ -828,19 +851,22 @@ addEventListener('keydown', e => {
 
 <!-- "Už nic nechci" — odmítnutí nabídky -->
 <script>
-document.getElementById('declineBtn').addEventListener('click', () => {
+/* Finální obrazovka — děkovací karta + QR a platební údaje pod ní.
+   Používá ji jak "Nechci", tak "Uzavřít objednávku" (v téhle variantě
+   se platí převodem, takže QR je potřeba v obou případech). */
+function showThanks(headline){
   document.getElementById('declineOfferWrap').hidden = true;
   document.getElementById('showAgainWrap').hidden = false;
   document.getElementById('offerSection').hidden = true;
   document.getElementById('storySection').hidden = true;
   document.getElementById('summary').hidden = true;
   document.getElementById('declineResult').hidden = false;
+  if (headline) document.getElementById('declineHeadline').textContent = headline;
+  window.scrollTo({top:0, behavior:'smooth'});
+}
 
-  /* Poznámka pro reálnou implementaci na Shoptetu:
-     tady se má podle způsobu platby rozhodnout, co se ukáže dál —
-     u platby kartou rovnou QR/potvrzení plateb. u dobírky jen tenhle
-     text bez QR (nic se nedoplácí). Tenhle prototyp platební metodu
-     nezná, proto se vždy zobrazí jen text bez QR. */
+document.getElementById('declineBtn').addEventListener('click', () => {
+  showThanks('V pořádku, nic dalšího nepřibalujeme 🐾');
 });
 
 document.getElementById('showAgainBtn').addEventListener('click', () => {

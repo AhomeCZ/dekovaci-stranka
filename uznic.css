@@ -31,7 +31,10 @@
 }
 .decline-btn:hover{
   border-color:var(--violet);
-  background:var(--violet-tint);
+  /* background-color, NE zkratka background — ta smazala gradient
+     u tlačítek, která ho mají (.decline-shop-link, #showAgainBtn),
+     a ta pak na hover/po kliknutí zbělala (bílý text na bílé). */
+  background-color:var(--violet-tint);
 }
 .decline-btn:active{
   transform:scale(.96);
@@ -57,6 +60,16 @@
   background-image:linear-gradient(90deg,#A64BC6 0%,#D362B6 100%);
   color:#fff;
   text-shadow:0 1px 2px rgba(120,60,140,.20);
+}
+/* Gradient je nutné zopakovat i pro hover/focus/active: .decline-btn:hover
+   výš používá zkratku `background`, která background-image smaže — tlačítko
+   pak mělo bílý podklad i bílý text, takže po kliknutí (na mobilu hover
+   zůstane viset) celé "zbělalo". */
+.decline-shop-link:hover,
+.decline-shop-link:focus,
+.decline-shop-link:active{
+  background-image:linear-gradient(90deg,#A64BC6 0%,#D362B6 100%);
+  color:#fff;
 }
 .decline-shop-link:hover{
   filter:brightness(1.05);

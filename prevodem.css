@@ -1,0 +1,90 @@
+/* Varianta "Objednávka převodem" — objednávka je přijatá, ale čeká se
+   na platbu bankovním převodem. Proti obj-prijata je navíc karta s QR
+   kódem a platebními údaji hned pod potvrzením, ať člověk nemusí nic
+   hledat v e-mailu. Vlastní třídy (.payment-card*), ať se to nekříží
+   s rozházenými pravidly pro .confirm/.tip ve styles.css. */
+
+.payment-card{
+  margin-top:16px;
+  padding:20px 18px;
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:20px;
+  box-shadow:0 4px 16px rgba(74,44,102,.08);
+  text-align:center;
+}
+
+/* Nadpis + popisek */
+.payment-card h2{
+  margin:0 0 6px;
+  font-family:'Poppins',system-ui,sans-serif;
+  font-size:1.08rem;
+  font-weight:800;
+  line-height:1.25;
+  color:#241B3D;
+}
+.payment-card .payment-note{
+  margin:0 auto;
+  max-width:46ch;
+  font-size:.84rem;
+  line-height:1.45;
+  color:var(--ink-muted);
+}
+
+/* QR (.qr a .pay-rows jsou sdílené komponenty ze styles.css) */
+.payment-card .qr{
+  margin:16px auto 14px;
+}
+.payment-card .pay-rows{
+  max-width:340px;
+  margin:0 auto;
+}
+
+/* Poznámka pod údaji — proč to ještě není zaplacené */
+.payment-hint{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  margin:14px auto 0;
+  max-width:44ch;
+  font-size:.78rem;
+  line-height:1.4;
+  color:var(--ink-faint);
+}
+.payment-hint svg{
+  flex:0 0 auto;
+  width:16px;height:16px;
+  color:var(--violet);
+}
+
+/* Desktop: text nahoře, QR vedle údajů — ať karta není zbytečně vysoká */
+@media (min-width:640px){
+  .payment-card{
+    /* stejná šířka jako děkovací karta nad tím (.decline-done) */
+    max-width:720px;
+    margin-left:auto;
+    margin-right:auto;
+    padding:26px 30px;
+  }
+  .payment-card h2{font-size:1.3rem;}
+  .payment-card .payment-note{font-size:.92rem;}
+  .payment-card-pay{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:28px;
+    margin-top:18px;
+  }
+  .payment-card .qr{
+    margin:0;
+    flex:0 0 auto;
+  }
+  .payment-card .pay-rows{
+    flex:1 1 320px;
+    max-width:360px;
+    margin:0;
+    font-size:.875rem;
+  }
+  .payment-card .pay-rows div{padding:4px 0;}
+}

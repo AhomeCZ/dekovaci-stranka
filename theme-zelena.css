@@ -1,0 +1,274 @@
+/* =============================================================
+   BAREVNÁ VARIANTA "ZELENÁ" — varianta B pro A/B test
+   -------------------------------------------------------------
+   Načte se přes ?theme=zelena. Bez parametru zůstává výchozí
+   růžová verze úplně beze změny (= varianta A / kontrolní).
+   Texty a obrázky mění theme-zelena.js.
+
+   VŠECHNY BARVY JSOU V JEDNOM BLOKU HNED POD TÍMHLE KOMENTÁŘEM.
+   Když se bude měnit odstín, stačí přepsat hodnotu tam — níž se
+   už žádný hex neopakuje.
+
+   Proč je tu tolik !important: JS na konci stránky si počítá
+   paletu sám a zapisuje ji inline na <html>. Inline styl přebije
+   jakýkoli stylesheet, takže bez !important by se nezměnilo nic.
+   (Podrobněji v AGENTS.md.)
+   ============================================================= */
+
+:root{
+  /* primární tlačítka (přidat do košíku, hlavní CTA) — přechod 45°,
+     tmavá zelená vlevo dole, světlejší vpravo nahoře */
+  --z-primary-from:#35502C;
+  --z-primary-to:#8BA65C;
+  --z-primary-grad:linear-gradient(45deg,var(--z-primary-from) 0%,var(--z-primary-to) 100%);
+  --z-primary:#8BA65C;        /* plná varianta té barvy, když je potřeba jen jeden odstín */
+  --z-primary-ink:#FFFFFF;    /* text na primárních tlačítkách */
+  --z-secondary:#4C7936;      /* sekundární tlačítka: bílá výplň + stroke */
+  --z-tertiary:#F8327B;       /* nejmenší kolečka: počet kusů v košíku */
+  --z-accent:#236025;         /* velké ceny, šipka košíku, ikona tužky */
+  --z-price-old:#E7569D;      /* přeškrtnutá cena */
+  --z-tip-bg:#F2F9F1;         /* pozadí karty Mňau tip */
+  --z-tip-ink:#426D4B;        /* text v kartě Mňau tip + tlačítko Nechci */
+  /* tlačítko Chci — přechod 110° přes tři odstíny zelené */
+  --z-chci-grad:linear-gradient(110deg,#2F6B45 0%,#4F865E 50%,#789C7D 100%);
+}
+
+/* -------------------------------------------------------------
+   1 ▸ PŘEPIS PALETY, KTEROU POČÍTÁ JS
+   Tokeny se jmenují --violet/--magenta historicky, používají se
+   jako obecný akcent — proto sem jdou zelené hodnoty.
+   ------------------------------------------------------------- */
+html{
+  --grad-cta:var(--z-primary-grad)!important;
+  --grad-add:var(--z-primary-grad)!important;
+  --violet:var(--z-accent)!important;
+  --violet-dark:var(--z-tip-ink)!important;
+  --violet-tint:var(--z-tip-bg)!important;
+  --magenta:var(--z-tertiary)!important;
+  --hot-pink:var(--z-tertiary)!important;
+  --ring-a:var(--z-primary)!important;
+  --ring-b:var(--z-accent)!important;
+  --script:var(--z-tip-ink)!important;
+  --petal:var(--z-tip-bg)!important;
+  --petal-core:#D8E9D2!important;
+  --on-add:var(--z-primary-ink)!important;
+  --on-cta:var(--z-primary-ink)!important;
+}
+
+/* -------------------------------------------------------------
+   2 ▸ PRIMÁRNÍ TLAČÍTKA — jedna plná barva, žádný přechod
+   Hover/active stavy jsou ve styles.css natvrdo a s !important,
+   proto se tu musí vyjmenovat všechny.
+   ------------------------------------------------------------- */
+.item .add,
+.item .add[aria-pressed="true"],
+.item .add:hover,
+.item .add:focus-visible,
+.item .add:active,
+.cta,
+.cta:hover,
+.cta:focus-visible,
+.cta:active,
+.btn-solid,
+.btn-solid:hover,
+.btn-solid:focus-visible,
+.product-detail-copy .modal-close{
+  background-image:var(--z-primary-grad)!important;
+  color:var(--z-primary-ink)!important;
+}
+
+/* -------------------------------------------------------------
+   3 ▸ SEKUNDÁRNÍ TLAČÍTKA — bílá výplň, tenký zelený stroke
+   ------------------------------------------------------------- */
+/* Vyšší specificita (html …) a longhandy schválně: styles.css má na
+   tyhle prvky pravidla se selektory typu html[data-palette] … a ta by
+   prostou .třídu přebila. */
+html .edit-btn,
+html .btn-ghost,
+html .summary-toggle{
+  background:#fff!important;
+  background-image:none!important;
+  border-width:1.5px!important;
+  border-style:solid!important;
+  border-color:var(--z-secondary)!important;
+  color:var(--z-accent)!important;
+}
+
+/* Ikona tužky u "Upravit údaje" — bílá výplň, zelená linka, měkký stín */
+.edit-btn{
+  box-shadow:0 0 14.9px rgba(35,96,37,.28)!important;
+}
+.edit-btn svg{
+  color:var(--z-accent)!important;
+}
+
+/* Šipka na rozbalení položek v košíku */
+.summary-toggle svg{
+  color:var(--z-accent)!important;
+}
+
+/* -------------------------------------------------------------
+   4 ▸ TERCIÁLNÍ DROBNOSTI — kolečko s počtem kusů v košíku
+   ------------------------------------------------------------- */
+.item .add-count{
+  background:var(--z-tertiary)!important;
+  color:#fff!important;
+  box-shadow:0 0 0 2px #fff;
+}
+
+/* -------------------------------------------------------------
+   5 ▸ CENY
+   ------------------------------------------------------------- */
+.price,
+.product-detail-copy .price{
+  color:var(--z-accent)!important;
+}
+.price-old,
+.product-detail-copy .price-old{
+  color:var(--z-price-old)!important;
+  text-decoration-color:var(--z-price-old)!important;
+}
+
+/* -------------------------------------------------------------
+   6 ▸ KARTA "MŇAU TIP"
+   Nadpis kurzívou + tučně, vedle něj normální text ve stejné
+   barvě, pod tím druhý řádek. Rozdělení textů dělá theme-zelena.js.
+   ------------------------------------------------------------- */
+html .tip,
+html[data-palette] .tip,
+html[data-palette="custom"] .tip{
+  background-color:var(--z-tip-bg)!important;
+  background-image:none!important;
+}
+/* Text a maskota přepisuje theme-zelena.js až po vykreslení stránky, takže
+   by na okamžik probliklo původní znění ("…Přibalíme?") a růžová kočka.
+   Do přepsání jsou schované — visibility drží místo, takže nic neposkočí.
+   Animace je pojistka: kdyby se JS nenačetl, obsah se stejně objeví. */
+.tip-copy,
+.tip .mascot--tip{
+  visibility:hidden;
+  animation:z-reveal 0s 1.5s forwards;
+}
+html.z-theme-ready .tip-copy,
+html.z-theme-ready .tip .mascot--tip{
+  visibility:visible;
+  animation:none;
+}
+@keyframes z-reveal{to{visibility:visible;}}
+
+/* Nadpis a text pod sebou, zarovnané doleva. */
+.tip-copy{
+  display:flex!important;
+  flex-direction:column!important;
+  align-items:flex-start!important;
+  row-gap:2px;
+  text-align:left!important;
+  color:var(--z-tip-ink)!important;
+}
+.tip-copy strong{
+  font-style:italic;
+  font-weight:800;
+  color:var(--z-tip-ink)!important;
+}
+.tip-copy .tip-lead,
+.tip-copy .tip-sub{
+  display:block;
+  font-style:normal;
+  font-weight:400;
+  line-height:1.3;
+  /* styles.css text v kartě ořezává třemi tečkami — tady se má
+     zobrazit celý */
+  white-space:normal!important;
+  overflow:visible!important;
+  text-overflow:clip!important;
+  color:var(--z-tip-ink)!important;
+}
+.tip-paw,
+.tip-watermark,
+.heading-paw{
+  color:var(--z-tip-ink)!important;
+}
+
+/* Kočičí uši v kartě — větší než ve výchozí verzi a posazené níž,
+   ať karta uřízne jen spodek hlavy a uši koukají celé. Šířka je
+   zastropovaná procentem, aby maskot nebral místo textu.
+   Na úpravu stačí měnit tyhle dvě dvojice hodnot. */
+html .tip .mascot--tip{
+  display:block!important;
+  width:74px!important;
+  max-width:21%!important;
+  height:auto!important;
+  align-self:flex-end!important;
+  margin-bottom:-16px!important;
+}
+@media (min-width:640px){
+  html .tip .mascot--tip{
+    width:132px!important;
+    margin-bottom:-24px!important;
+  }
+}
+
+/* -------------------------------------------------------------
+   7 ▸ TLAČÍTKA NECHCI / CHCI
+   ------------------------------------------------------------- */
+/* "Nechci" — bílá výplň, zelený stroke i text */
+html .decline-btn,
+html[data-palette] .decline-btn{
+  background-color:#fff!important;
+  background-image:none!important;
+  border-width:1.5px!important;
+  border-style:solid!important;
+  border-color:var(--z-tip-ink)!important;
+  color:var(--z-tip-ink)!important;
+  text-shadow:none!important;
+}
+html .decline-btn:hover{
+  background-color:var(--z-tip-bg)!important;
+}
+
+/* "Chci" — přechod 110° přes tři zelené odstíny */
+#showAgainBtn,
+#showAgainBtn:hover{
+  background-image:var(--z-chci-grad)!important;
+  border:0!important;
+  color:#fff!important;
+  text-shadow:none!important;
+}
+
+/* -------------------------------------------------------------
+   9 ▸ SPODNÍ LIŠTA — odpočet a částka k doplacení
+   Stejná zelená jako ceny. Růžová zůstává jen na kolečku s počtem
+   kusů v košíku (viz blok 4).
+   ------------------------------------------------------------- */
+html .timer-face .clock,
+html .timer-face .paw,
+html .total strong,
+html #total{
+  color:var(--z-accent)!important;
+}
+/* proužek pod odpočtem — vybarvená část podle zbývajícího času */
+html .timer::after{
+  background:linear-gradient(90deg,
+    var(--z-accent) 0 calc(var(--progress,1) * 100%),
+    var(--line) calc(var(--progress,1) * 100%) 100%)!important;
+}
+
+/* -------------------------------------------------------------
+   8 ▸ DĚKOVACÍ KARTA PO ODMÍTNUTÍ
+   Tyhle dvě věci nebyly v zadání — sladěné s primární barvou,
+   ať v zelené verzi nezůstane fialová. Klidně přepiš.
+   ------------------------------------------------------------- */
+.decline-done{
+  background:linear-gradient(135deg,var(--z-tip-bg) 0%,rgba(242,249,241,0) 100%)!important;
+}
+/* Musí být specifičtější než pravidlo pro "Nechci" výš — tlačítko
+   "Zpět do obchodu" má obě třídy (.decline-btn i .decline-shop-link). */
+html[data-palette] .decline-shop-link,
+html[data-palette] .decline-shop-link:hover,
+html[data-palette] .decline-shop-link:focus,
+html[data-palette] .decline-shop-link:active{
+  background-color:transparent!important;
+  background-image:var(--z-primary-grad)!important;
+  border-width:0!important;
+  color:var(--z-primary-ink)!important;
+}

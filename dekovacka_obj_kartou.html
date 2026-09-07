@@ -1,0 +1,874 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Děkujeme za objednávku</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="theme-violet.css">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="no-badge.css">
+<link rel="stylesheet" href="uznic.css">
+
+<!-- Přepínač barevných variant pro A/B test.
+     Bez parametru = výchozí růžová (varianta A).
+     ?theme=zelena přilinkuje theme-zelena.css + theme-zelena.js (varianta B). -->
+<script>
+(function(){
+  const name = new URLSearchParams(location.search).get('theme');
+  if (!name || !/^[a-z0-9-]+$/.test(name)) return;
+  const css = document.createElement('link');
+  css.rel = 'stylesheet';
+  css.href = 'theme-' + name + '.css';
+  document.head.appendChild(css);
+  const js = document.createElement('script');
+  js.src = 'theme-' + name + '.js';
+  js.defer = true;
+  document.head.appendChild(js);
+})();
+</script>
+</head>
+<body>
+
+<!-- sdílené ikony -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="ringGrad" x1="0" y1="0" x2="1" y2="1">
+       <stop offset="0%" stop-color="#D7C0F0"/>
+       <stop offset="100%" stop-color="#D88EAE"/>
+    </linearGradient>
+    <symbol id="i-paw" viewBox="0 0 24 24">
+      <ellipse cx="5.9" cy="10.4" rx="2.1" ry="2.7"/>
+      <ellipse cx="10" cy="7.4" rx="2.2" ry="3"/>
+      <ellipse cx="15" cy="7.4" rx="2.2" ry="3"/>
+      <ellipse cx="19.1" cy="10.4" rx="2.1" ry="2.7"/>
+      <path d="M12.5 12.3c3.4 0 6.2 2.4 6.2 5.2 0 2.1-1.7 3.4-3.8 3.4-1.3 0-2.1-.5-2.4-.5s-1.1.5-2.4.5c-2.1 0-3.8-1.3-3.8-3.4 0-2.8 2.8-5.2 6.2-5.2z"/>
+    </symbol>
+    <symbol id="i-cart" viewBox="0 0 24 24" fill="none">
+      <path d="M3 4h2.2l2.1 10.4a1.6 1.6 0 001.6 1.3h8.3a1.6 1.6 0 001.6-1.2L20.5 7H6.2" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="9.5" cy="19.3" r="1.5" fill="currentColor"/>
+      <circle cx="17.3" cy="19.3" r="1.5" fill="currentColor"/>
+    </symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24" fill="none">
+      <rect x="3" y="5.5" width="18" height="13" rx="2.2" stroke="currentColor" stroke-width="1.8"/>
+      <path d="M4 7l8 5.5L20 7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="i-check" viewBox="0 0 24 24" fill="none">
+      <path d="M5 12.5l4.5 4.5L19 7" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24" fill="none">
+      <path d="M12 5.5v13M5.5 12h13" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"/>
+    </symbol>
+    <symbol id="i-chev" viewBox="0 0 24 24" fill="none">
+      <path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+    <symbol id="i-photo" viewBox="0 0 24 24" fill="none">
+      <rect x="3" y="5" width="18" height="14" rx="2" stroke="currentColor" stroke-width="1.5"/>
+      <circle cx="8.5" cy="10" r="1.5" fill="currentColor"/>
+      <path d="M4 17l4.5-4.5 3 3L15 12l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </symbol>
+  </defs>
+</svg>
+
+<main class="page">
+
+  <!-- 1 ▸ POTVRZENÍ -->
+  <section class="confirm">
+    <span class="confirm-check" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none"><path d="M6.5 12.4l3.6 3.6L18 8.2" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </span>
+    <h1>Objednávka je zaplacená</h1>
+    <p class="confirm-mail">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="#i-mail"/></svg>
+      <span><span id="mailText">jana.novakova@email.cz</span></span>
+    </p>
+    <button class="edit-btn" id="mailToggle" type="button" aria-label="Upravit údaje">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M4 20h4l10-10a2.5 2.5 0 10-3.5-3.5L4.5 16.5 4 20z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
+        <path d="M13.5 7l3.5 3.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+      </svg>
+      <span class="edit-label">Upravit</span>
+    </button>
+    <div class="mail-edit" id="mailEdit" hidden>
+      <input type="email" id="mailInput" value="jana.novakova@email.cz" aria-label="E-mailová adresa">
+      <button class="btn-solid" id="mailSave" type="button">Uložit</button>
+      <button class="btn-ghost" id="mailCancel" type="button">Zrušit</button>
+    </div>
+  </section>
+
+  <!-- 2 ▸ TIP OD MASKOTA -->
+  <div class="tip" role="note">
+    <img class="mascot mascot--tip" src="assets/img-2.png" alt="">
+    <svg class="tip-paw" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#i-paw"/></svg>
+    <svg class="tip-watermark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#i-paw"/></svg>
+    <span class="tip-copy">
+      <strong>Mňau tip: Přibalit? <svg class="heading-paw" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#i-paw"/></svg></strong>
+      <span>Vejde se tam ještě něco!</span>
+    </span>
+    <!-- 3a ▸ ODMÍTNUTÍ NABÍDKY -->
+    <p class="decline-offer" id="declineOfferWrap">
+      <button class="decline-btn" id="declineBtn" type="button">Nechci</button>
+    </p>
+    <!-- 3b ▸ NÁVRAT K NABÍDCE (skryté, dokud nekliknete na Nechci) -->
+    <p class="decline-offer" id="showAgainWrap" hidden>
+      <button class="decline-btn" id="showAgainBtn" type="button">Chci</button>
+    </p>
+  </div>
+
+  <!-- 3c ▸ STAV PO ODMÍTNUTÍ (skryté, dokud nekliknete výš) -->
+  <div id="declineResult" hidden>
+    <div class="decline-done" id="declineDone">
+
+
+
+
+      <img class="mascot mascot--tip" src="assets/krabicka.png" alt="">
+      <div class="decline-done-copy">
+        <strong>V pořádku, nic dalšího nepřibalujeme 🐾</strong>
+        <span>Objednávku už pro vás chystáme, brzy vyrazí na cestu. Díky, že nakupujete u nás!</span>
+        <a class="decline-btn decline-shop-link" href="#">← Zpět do obchodu</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3 ▸ NABÍDKA -->
+  <section class="offer" id="offerSection">
+    <div class="section-head">
+      <div class="tile"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#i-paw"/></svg></div>
+      <div class="head-copy">
+        <h2>Ještě se vám může hodit!</h2>
+        <p>Doplňky, které zákazníci nejčastěji přidávají do objednávky.</p>
+      </div>
+      <svg class="doodle" width="34" height="30" viewBox="0 0 28 30" fill="none" aria-hidden="true">
+        <path d="M8 20c-4-6 1-12 6-8 5-4 10 2 6 8-2 3-6 6-6 6s-4-3-6-6z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+
+    <ul class="grid" id="grid"></ul>
+    <div class="sentinel" id="sentinel" aria-hidden="true">
+      <span class="spinner"></span>
+    </div>
+  </section>
+
+  <!-- 4 ▸ PŘÍBĚH -->
+  <section class="story" id="storySection">
+    <div class="story-copy">
+      <h3>Balíme v Brně, ručně</h3>
+      <p>Každý dárek chystáme v naší dílně. Děkujeme, že podporujete poctivou českou tvorbu — jedeme v tom s vámi.</p>
+    </div>
+  </section>
+
+  <!-- 5 ▸ SOUHRN -->
+  <aside class="summary" id="summary" data-state="empty">    <div class="summary-inner">
+      <img class="mascot mascot--bar" src="assets/img-4.png" alt="">
+      <div class="summary-top">
+        <svg class="summary-paw" viewBox="0 0 24 24" fill="currentColor" aria-label="Tlapka" role="img"><use href="#i-paw"/></svg>
+        <div class="timer">
+          <svg class="ring" viewBox="0 0 68 68" aria-hidden="true">
+            <circle class="track" cx="34" cy="34" r="30"/>
+            <circle class="prog" id="ring" cx="34" cy="34" r="30"/>
+          </svg>
+          <div class="timer-face">
+            <span class="clock" id="clock">15:00</span>
+            <svg class="paw" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#i-paw"/></svg>
+          </div>
+        </div>
+        <div class="summary-note">
+          <strong>Krabička je otevřená</strong>
+          <span id="noteSub">Ještě můžete něco přidat.</span>
+        </div>
+        <div class="total">
+          <span>K doplacení:</span>
+          <strong id="total">0 Kč</strong>
+        </div>
+      </div>
+      <button class="summary-toggle" id="summaryToggle" type="button" aria-label="Rozbalit položky v košíku" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="#i-chev"/></svg>
+      </button>
+      <div class="cart-panel" id="cartPanel">
+        <div class="cart-panel-body">
+          <div class="cart-panel-head">
+            <strong>Přidané produkty</strong>
+            <span id="cartCount">0 položek</span>
+          </div>
+          <div class="cart-items" id="cartItems" aria-live="polite"></div>
+        </div>
+      </div>
+      <button class="cta" id="cta" type="button">
+        <span id="ctaText">Doplatit 0 Kč</span>
+        <svg aria-hidden="true"><use href="#i-chev"/></svg>
+      </button>
+    </div>
+  </aside>
+
+</main>
+
+<!-- QR PLATBA -->
+<div class="backdrop" id="backdrop" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="qrTitle">
+    <button class="modal-x" id="qrX" type="button" aria-label="Zavřít">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <h2 id="qrTitle">Ještě doplatek a balíme</h2>
+    <p class="sub">Načtěte kód v aplikaci své banky. Jakmile platba dorazí, věci přibalíme do krabičky.</p>
+
+    <div class="qr" id="qrBox"></div>
+
+    <dl class="pay-rows">
+      <div><dt>Částka</dt><dd id="qrAmount">0 Kč</dd></div>
+      <div><dt>Variabilní symbol</dt><dd>1415697</dd></div>
+      <div><dt>Zaplatit do</dt><dd id="qrDeadline">14:58</dd></div>
+    </dl>
+
+    <button class="modal-close" id="qrClose" type="button">Zavřít</button>
+  </div>
+</div>
+
+<!-- DETAIL PRODUKTU -->
+<div class="backdrop" id="productBackdrop" hidden>
+  <div class="modal product-modal" role="dialog" aria-modal="true" aria-labelledby="productTitle">
+    <button class="modal-x" id="productX" type="button" aria-label="Zavřít">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </button>
+    <img class="product-detail-img" id="productDetailImg" alt="">
+    <div class="product-detail-copy">
+      <h2 id="productTitle"></h2>
+      <p id="productDescription"></p>
+      <div class="prices">
+        <span class="price-old" id="productOldPrice"></span>
+        <span class="price" id="productPrice"></span>
+      </div>
+      <button class="modal-close" id="productClose" type="button">Zavřít</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ---------- e-mail ---------- */
+const mailToggle = document.getElementById('mailToggle');
+const mailEdit   = document.getElementById('mailEdit');
+const mailInput  = document.getElementById('mailInput');
+const mailText   = document.getElementById('mailText');
+
+document.getElementById('mailToggle').addEventListener('click', () => {
+  mailEdit.hidden = !mailEdit.hidden;
+  if (!mailEdit.hidden) { mailInput.focus(); mailInput.select(); }
+});
+document.getElementById('mailCancel').addEventListener('click', () => {
+  mailInput.value = mailText.textContent;
+  mailEdit.hidden = true;
+});
+document.getElementById('mailSave').addEventListener('click', () => {
+  const v = mailInput.value.trim();
+  if (!v.includes('@')) { mailInput.focus(); return; }
+  mailText.textContent = v;
+  mailEdit.hidden = true;
+});
+
+/* ---------- produkty ---------- */
+const photos = [
+  'assets/img-5.jpg',
+  'assets/img-6.jpg',
+  'assets/img-7.jpg',
+  'assets/img-8.jpg',
+  'assets/img-9.jpg',
+  'assets/img-10.jpg'
+];
+
+const products = [
+  {n:'Dřevěná dárková krabička na víno s gravírováním a suchými květy',     p:97,  o:259, d:'Dřevěná krabička s jemným gravírováním, která udělá z každého vína krásný dárek.'},
+  {n:'Krásný bavlněný dárkový sáček se srdcem a stahovací šňůrkou',         p:18,  o:65,  d:'Lehký dárkový sáček pro elegantní zabalení drobností i větších překvapení.'},
+  {n:'Dlouhé sirky ve skleněné lahvičce s korkovým uzávěrem a škrtátkem',             p:39,  o:110, d:'Stylová lahvička se sirkami a škrtátkem. Elegantní skleněná dózička s korkem — doplněk ke svíčkám, co má styl. Krása i funkčnost v jednom.'},
+  {n:'Voňavá sójová svíčka – Levandule s přírodním esenciálním olejem',    p:49,  o:129, d:'Jemně vonící svíčka s uklidňující levandulovou vůní pro příjemný večer.'},
+  {n:'Dřevěné srdíčko s textem „Děkuji, že jsi tu“ na jutovém provázku',     p:29,  o:79,  d:'Malé dřevěné srdíčko s milým textem, které potěší na první pohled.'},
+  {n:'Designové sirky v krabičce',   p:21,  o:60,  d:'Praktické zápalky v hezké krabičce, která může zůstat vystavená vedle svíčky.'},
+  {n:'Hrnek „Nejlepší tygr“',        p:109, o:199, d:'Originální hrnek pro milovníky čaje, kávy a tygrů s pořádnou dávkou osobnosti.'},
+  {n:'Dárková krabička s mašlí',     p:59,  o:149, d:'Hotová krabička s mašlí, díky které bude dárek vypadat skvěle bez dalšího balení.'},
+  {n:'Koupelová sůl Levandule',      p:39,  o:99,  d:'Voňavá koupelová sůl s levandulí pro chvíli klidu a domácího rozmazlování.'},
+  {n:'Kytice sušené levandule',      p:49,  o:129, d:'Sušená levandule, která provoní interiér a vydrží krásná dlouhé týdny.'},
+  {n:'Mléčná čokoláda „Pro radost“', p:29,  o:79,  d:'Jemná mléčná čokoláda jako malá sladká tečka k objednávce.'},
+  {n:'Svíčka ze včelího vosku',      p:39,  o:99,  d:'Přírodní svíčka ze včelího vosku s teplým světlem a příjemnou vůní.'},
+  {n:'Vonný olej do aromalampy',     p:45,  o:89,  d:'Pár kapek voňavého oleje promění domov v útulné místo během chvilky.'},
+  {n:'Přáníčko pro radost',          p:15,  o:39,  d:'Papírové přáníčko pro osobní vzkaz, který udělá z dárku ještě větší radost.'},
+  {n:'Keramický svícen',             p:69,  o:139, d:'Minimalistický keramický svícen, který krásně doplní každou svíčku.'},
+  {n:'Dárková stuha',                p:12,  o:29,  d:'Jemná stuha pro poslední detail, který dárkové balení hezky spojí.'},
+  {n:'Mini mýdlo s levandulí',       p:25,  o:59,  d:'Malé ručně vyráběné mýdlo s levandulovou vůní pro příjemný každodenní rituál.'},
+  {n:'Přírodní zápalky v tubusu',    p:35,  o:79,  d:'Stylový tubus s dlouhými zápalkami, který se hodí ke svíčkám i do dárkového balíčku.'}
+];
+
+const grid     = document.getElementById('grid');
+const sentinel = document.getElementById('sentinel');
+const totalEl  = document.getElementById('total');
+const summary  = document.getElementById('summary');
+const cta      = document.getElementById('cta');
+const ctaText  = document.getElementById('ctaText');
+const noteSub  = document.getElementById('noteSub');
+const summaryTop = document.querySelector('.summary-top');
+const summaryToggle = document.getElementById('summaryToggle');
+const cartItems = document.getElementById('cartItems');
+const cartCount = document.getElementById('cartCount');
+const productBackdrop = document.getElementById('productBackdrop');
+const productDetailImg = document.getElementById('productDetailImg');
+const productTitle = document.getElementById('productTitle');
+const productDescription = document.getElementById('productDescription');
+const productPrice = document.getElementById('productPrice');
+const productOldPrice = document.getElementById('productOldPrice');
+let total = 0, count = 0;
+const cart = new Map();
+let expanded = false;
+let visible = 0;
+let loading = false;
+
+/* Superman zůstává uvnitř sticky souhrnu, aby nezakrýval produkty. */
+(function(){
+  const bar = summary.querySelector('.mascot--bar');
+  if (!bar) return;
+  const fx = document.createElement('div');
+  fx.className = 'cat-fx';
+  bar.parentNode.insertBefore(fx, bar);
+  fx.appendChild(bar);
+  for (let i = 0; i < 3; i++){
+    const l = document.createElement('span');
+    l.className = 'cat-line';
+    l.setAttribute('aria-hidden','true');
+    fx.appendChild(l);
+  }
+  summaryTop.prepend(fx);
+})();
+
+/* Nové PNG maskoty s průhledností připravené z dodaných obrázků. */
+const mascotTip = document.querySelector('.mascot--tip');
+const mascotBar = document.querySelector('.mascot--bar');
+const mascotFallback = new WeakMap();
+[mascotTip, mascotBar].forEach(img => { if (img) mascotFallback.set(img, img.getAttribute('src')); });
+function loadMascotAsset(img, filename){
+  if (!img) return;
+  if (!mascotFallback.has(img)) mascotFallback.set(img, img.getAttribute('src'));
+  const fallback = mascotFallback.get(img);
+  const candidates = [
+    filename,
+    'attached_assets/' + filename,
+    'assets/' + filename
+  ];
+  let index = 0;
+  const tryNext = () => {
+    if (index >= candidates.length){
+      img.onerror = null;
+      img.src = fallback;
+      return;
+    }
+    img.onerror = tryNext;
+    img.src = candidates[index++];
+  };
+  tryNext();
+}
+/* Alternativní sada maskotů vázaná na konkrétní paletu.
+   Pro gradient-1 se použije super kočka + kočičí uši. */
+const MASCOT_ART = {
+  'gradient-1': {
+    tip: 'assets/img-11.png',
+    bar: 'assets/img-12.png'
+  }
+};
+const MASCOT_DEFAULT_FILES = {
+  tip: 'kocici-usi_1788271651925.png',
+  bar: 'superkocka_1788271651923.png'
+};
+function applyMascotPalette(){
+  const root = document.documentElement;
+  const art = root.getAttribute('data-art') === '1'
+    ? MASCOT_ART['gradient-1']
+    : MASCOT_ART[root.getAttribute('data-palette')];
+  if (art){
+    if (mascotTip){ mascotTip.onerror = null; mascotTip.src = art.tip; }
+    if (mascotBar){ mascotBar.onerror = null; mascotBar.src = art.bar; }
+    return;
+  }
+  loadMascotAsset(mascotTip, MASCOT_DEFAULT_FILES.tip);
+  loadMascotAsset(mascotBar, MASCOT_DEFAULT_FILES.bar);
+}
+window.applyMascotPalette = applyMascotPalette;
+applyMascotPalette();
+
+/* lišta se souhrnem naběhne, až když se člověk dostane pořádně dolů */
+function showBar(){ summary.classList.add('is-visible'); }
+function updateBar(){
+  /* Odpočet je sticky od začátku a nesmí zmizet při scrollování nahoru. */
+  showBar();
+}
+addEventListener('scroll', updateBar, {passive:true});
+
+function refresh(){
+  count = [...cart.values()].reduce((sum, qty) => sum + qty, 0);
+  total = [...cart.entries()].reduce((sum, [index, qty]) => sum + products[index].p * qty, 0);
+  totalEl.textContent = total + ' Kč';
+  ctaText.textContent = 'Doplatit ' + total + ' Kč';
+  summary.dataset.state = count ? 'filled' : 'empty';
+  summaryToggle.hidden = !count;
+  summaryToggle.setAttribute('aria-expanded', String(expanded && !!count));
+  summaryToggle.setAttribute('aria-label', expanded ? 'Sbalit položky v košíku' : 'Rozbalit položky v košíku');
+  summary.classList.toggle('is-expanded', expanded && !!count);
+  cartCount.textContent = count + ' ' + (count === 1 ? 'položka' : (count >= 2 && count <= 4 ? 'položky' : 'položek'));
+  renderCart();
+  setNote(count
+    ? (count === 1 ? 'Jedna věc čeká na přibalení.' : count + ' věci čekají na přibalení.')
+    : 'Ještě můžete něco přidat.');
+}
+
+function renderCart(){
+  cartItems.innerHTML = [...cart.entries()].map(([index, qty]) => {
+    const item = products[index];
+    return '<div class="cart-row">' +
+      '<img src="' + photos[index % photos.length] + '" alt="">' +
+      '<span class="cart-row-name">' + item.n + '</span>' +
+      '<span class="qty-controls" aria-label="Počet kusů: ' + item.n + '">' +
+        '<button type="button" data-cart-action="minus" data-index="' + index + '" aria-label="Odebrat kus">−</button>' +
+        '<strong>' + qty + '</strong>' +
+        '<button type="button" data-cart-action="plus" data-index="' + index + '" aria-label="Přidat kus">+</button>' +
+      '</span>' +
+    '</div>';
+  }).join('');
+}
+
+function updateCard(index){
+  const card = grid.children[index];
+  if (!card) return;
+  const button = card.querySelector('.add');
+  const qty = cart.get(index) || 0;
+  button.setAttribute('aria-pressed', String(qty > 0));
+  button.innerHTML =
+    '<svg class="add-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="' + (qty ? '#i-check' : '#i-plus') + '"/></svg>' +
+    '<svg class="add-cart" viewBox="0 0 24 24" aria-hidden="true"><use href="' + (qty ? '#i-check' : '#i-cart') + '"/></svg>' +
+    '<span class="add-label">' + (qty ? 'Přidáno' : 'Přidat') + '</span>' +
+    (qty ? '<span class="add-count">' + qty + '</span>' : '');
+  button.setAttribute('aria-label', qty ? 'Přidat do košíku — v košíku ' + qty + ' ks' : 'Přidat do košíku');
+}
+
+/* d) text pod nadpisem — prolnutí 150 ms */
+function setNote(text){
+  if (noteSub.textContent === text) return;
+  noteSub.classList.add('is-fading');
+  setTimeout(() => {
+    noteSub.textContent = text;
+    noteSub.classList.remove('is-fading');
+  }, 150);
+}
+
+/* c) skok částky */
+function bumpTotal(){
+  const box = document.querySelector('.total');
+  box.classList.remove('bump');
+  void box.offsetWidth;
+  box.classList.add('bump');
+}
+
+/* b) letící miniatura — 800 ms po oblouku do částky v liště */
+function flyToBox(cardImg, target, onLand){
+  const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduce || !cardImg) { onLand(); return; }
+
+  const a = cardImg.getBoundingClientRect();
+  const b = target.getBoundingClientRect();
+  const ghost = cardImg.cloneNode();
+  Object.assign(ghost.style, {
+    position:'fixed', left:a.left+'px', top:a.top+'px',
+    width:a.width+'px', height:a.height+'px', borderRadius:'8px',
+    zIndex:80, pointerEvents:'none', objectFit:'cover',
+    boxShadow:'0 12px 26px rgba(30,23,38,.28)'
+  });
+  document.body.appendChild(ghost);
+
+  const dx = b.left - a.left, dy = b.top - a.top;
+  ghost.animate([
+    {transform:'translate(0,0) scale(1) rotate(0deg)', opacity:1, offset:0},
+    {transform:'translate('+(dx/2)+'px,'+(dy/2 - 200)+'px) scale(.7) rotate(8deg)', offset:.5},
+    {transform:'translate('+dx+'px,'+dy+'px) scale(.4) rotate(16deg)', opacity:0}
+  ], {duration:800, easing:'cubic-bezier(.65,0,.35,1)'}).onfinish = () => {
+    ghost.remove();
+    onLand();
+  };
+}
+
+/* kolik sloupců má mřížka právě teď */
+function cols(){
+  return getComputedStyle(grid).gridTemplateColumns.split(' ').filter(Boolean).length || 1;
+}
+
+/* zobrazeno je vždy celý počet řádků — nikdy nezůstane díra */
+function apply(){
+  const c = cols();
+  visible = Math.min(products.length, Math.ceil(visible / c) * c);
+  [...grid.children].forEach((el, i) => el.hidden = i >= visible);
+  sentinel.hidden = visible >= products.length;
+}
+
+function loadMore(){
+  if (visible >= products.length || loading) return;
+  loading = true;
+  setTimeout(() => {
+    visible = products.length;
+    apply();
+    loading = false;
+  }, 320);                       /* aby bylo kolečko chvíli vidět */
+}
+
+/* spustí donačtení, jakmile se kolečko dostane do zorného pole */
+function maybeLoad(){
+  if (visible >= products.length || loading) return;
+  const r = sentinel.getBoundingClientRect();
+  if (r.top < innerHeight - 20) loadMore();
+}
+
+products.forEach((item, i) => {
+  const li = document.createElement('li');
+  li.className = 'item';
+  li.hidden = true;
+  li.innerHTML =
+    '<button class="thumb" type="button" aria-label="Zobrazit detail: ' + item.n + '">' +
+      '<img src="' + photos[i % photos.length] + '" alt="' + item.n + '" loading="lazy">' +
+      (item.o > item.p ? '<span class="badge">\u2212' + Math.round((1 - item.p / item.o) * 100) + '\u00A0%</span>' : '') +
+    '</button>' +
+    '<div class="item-body">' +
+      '<p class="name">' + item.n + '</p>' +
+    '</div>' +
+    '<div class="prices"><span class="price-old">' + item.o + ' Kč</span>' +
+    '<span class="price">' + item.p + ' Kč</span></div>' +
+    '<button class="add" type="button" aria-pressed="false" aria-label="Přidat do košíku">' +
+      '<svg class="add-icon" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-plus"/></svg>' +
+      '<svg class="add-cart" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-cart"/></svg>' +
+      '<span class="add-label">Přidat</span>' +
+    '</button>';
+
+  li.querySelector('.thumb').addEventListener('click', () => openProduct(i));
+
+  li.querySelector('.add').addEventListener('click', e => {
+    const img = li.querySelector('.thumb img');
+
+    /* Každé kliknutí přidá další kus stejného produktu. Odebrání je v souhrnu. */
+    cart.set(i, (cart.get(i) || 0) + 1);
+    updateCard(i);
+    refresh();
+    const firstItem = count === 1;
+    summary.dataset.state = 'filled';
+    if (firstItem) cta.classList.add('is-entering');
+
+    const launch = () => flyToBox(img, totalEl, bumpTotal);
+
+    if (!summary.classList.contains('is-visible')){
+      showBar();
+      setTimeout(launch, 340);
+    } else {
+      launch();
+    }
+  });
+  grid.appendChild(li);
+});
+
+cartItems.addEventListener('click', e => {
+  const button = e.target.closest('button[data-cart-action]');
+  if (!button) return;
+  const index = Number(button.dataset.index);
+  const qty = cart.get(index) || 0;
+  if (button.dataset.cartAction === 'plus') cart.set(index, qty + 1);
+  if (button.dataset.cartAction === 'minus'){
+    if (qty <= 1) cart.delete(index);
+    else cart.set(index, qty - 1);
+  }
+  updateCard(index);
+  refresh();
+});
+
+summaryToggle.addEventListener('click', () => {
+  if (!count) return;
+  expanded = !expanded;
+  refresh();
+});
+
+function openProduct(index){
+  const item = products[index];
+  productDetailImg.src = photos[index % photos.length];
+  productDetailImg.alt = item.n;
+  productTitle.textContent = item.n;
+  productDescription.textContent = item.d;
+  productOldPrice.textContent = item.o + ' Kč';
+  productPrice.textContent = item.p + ' Kč';
+  productBackdrop.hidden = false;
+  document.body.style.overflow = 'hidden';
+  document.getElementById('productClose').focus();
+}
+
+function closeProduct(){
+  productBackdrop.hidden = true;
+  document.body.style.overflow = '';
+}
+
+document.getElementById('productClose').addEventListener('click', closeProduct);
+document.getElementById('productX').addEventListener('click', closeProduct);
+productBackdrop.addEventListener('click', e => {
+  if (e.target === productBackdrop) closeProduct();
+});
+
+/* první dávka: tři plné řádky, aby se zobrazilo víc produktů hned */
+visible = products.length;   /* na start se vykreslí všechny produkty */
+apply();
+refresh();
+
+/* donačítání při scrollu */
+addEventListener('scroll', maybeLoad, {passive:true});
+
+/* při změně šířky okna dorovnat řádky */
+let resizeTimer;
+addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => { apply(); maybeLoad(); }, 150);
+});
+
+/* ---------- odpočet ---------- */
+const clock = document.getElementById('clock');
+const timer = document.querySelector('.timer');
+const ring  = document.getElementById('ring');
+const track = document.querySelector('.timer .track');
+const CIRC  = 2 * Math.PI * 30;
+const ARC   = CIRC * 0.8;              /* mezera dole, jako v komponentě */
+const START = 15 * 60;
+let left = START;
+
+[ring, track].forEach(c => c.style.strokeDasharray = ARC + ' ' + CIRC);
+updateBar();
+
+setInterval(() => {
+  if (left <= 0) return;
+  left--;
+  const m = String(Math.floor(left / 60)).padStart(2, '0');
+  const s = String(left % 60).padStart(2, '0');
+  clock.textContent = m + ':' + s;
+  ring.style.strokeDashoffset = ARC * (1 - left / START);
+  timer.style.setProperty('--progress', left / START);
+
+  timer.classList.toggle('is-urgent',   left <= 60 && left > 0);
+  timer.classList.toggle('is-critical', left <= 10 && left > 0);
+  if (left === 0){
+    timer.classList.add('is-done');
+    timer.classList.remove('is-urgent','is-critical');
+  }
+}, 1000);
+
+/* ---------- QR platba ---------- */
+const backdrop   = document.getElementById('backdrop');
+const qrBox      = document.getElementById('qrBox');
+const qrAmount   = document.getElementById('qrAmount');
+const qrDeadline = document.getElementById('qrDeadline');
+
+/* náhodný kód v QR podobě — pro prototyp, ne skutečná platební data */
+function drawQR(){
+  const N = 25, m = [];
+  for (let y = 0; y < N; y++){
+    m[y] = [];
+    for (let x = 0; x < N; x++) m[y][x] = Math.random() > .52 ? 1 : 0;
+  }
+  /* poziční značky v rozích */
+  const finder = (ox, oy) => {
+    for (let y = 0; y < 7; y++)
+      for (let x = 0; x < 7; x++){
+        const edge = x === 0 || x === 6 || y === 0 || y === 6;
+        const core = x > 1 && x < 5 && y > 1 && y < 5;
+        m[oy + y][ox + x] = edge || core ? 1 : 0;
+      }
+    for (let y = -1; y < 8; y++)
+      for (let x = -1; x < 8; x++){
+        const py = oy + y, px = ox + x;
+        if (py < 0 || px < 0 || py >= N || px >= N) continue;
+        if (y === -1 || y === 7 || x === -1 || x === 7) m[py][px] = 0;
+      }
+  };
+  finder(0, 0); finder(N - 7, 0); finder(0, N - 7);
+
+  let path = '';
+  for (let y = 0; y < N; y++)
+    for (let x = 0; x < N; x++)
+      if (m[y][x]) path += 'M' + x + ' ' + y + 'h1v1h-1z';
+
+  qrBox.innerHTML =
+    '<svg viewBox="0 0 ' + N + ' ' + N + '" shape-rendering="crispEdges" role="img" aria-label="QR kód pro platbu">' +
+    '<path d="' + path + '" fill="#1E1726"/></svg>';
+}
+
+function openQR(){
+  if (!count) return;
+  drawQR();
+  qrAmount.textContent = total + ' Kč';
+  qrDeadline.textContent = clock.textContent;
+  backdrop.hidden = false;
+  document.body.style.overflow = 'hidden';
+  document.getElementById('qrClose').focus();
+}
+function closeQR(){
+  backdrop.hidden = true;
+  document.body.style.overflow = '';
+}
+
+document.getElementById('cta').addEventListener('click', openQR);
+document.getElementById('qrClose').addEventListener('click', closeQR);
+document.getElementById('qrX').addEventListener('click', closeQR);
+backdrop.addEventListener('click', e => { if (e.target === backdrop) closeQR(); });
+addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  if (!backdrop.hidden) closeQR();
+  if (!productBackdrop.hidden) closeProduct();
+});
+</script>
+
+<script>
+/* Pevné nastavení vzhledu (dřív měnitelné přes panel nastavení vzhledu). */
+(function(){
+  const FIXED = {mascot:'hrava', palette:'custom', density:'huste'};
+  const state = {urgency:'normal'};
+  const grad = {
+    cols:['#B27EDB','#C454B9','#EE729D'],
+    angle:100,
+    textOn:false,
+    accent:'#D6297D', ink:'#2A2233', bg:'#FAFAFB',
+    radius:26,
+    art:true
+  };
+
+  const root = document.documentElement;
+
+  function toRGB(hex){
+    let s = String(hex).replace('#','');
+    if (s.length === 3) s = s.split('').map(c => c + c).join('');
+    return [parseInt(s.slice(0,2),16), parseInt(s.slice(2,4),16), parseInt(s.slice(4,6),16)];
+  }
+  function toHex(r,g,b){
+    return '#' + [r,g,b].map(v => Math.max(0, Math.min(255, Math.round(v))).toString(16).padStart(2,'0')).join('').toUpperCase();
+  }
+  function toHSL(hex){
+    const [r,g,b] = toRGB(hex).map(v => v/255);
+    const mx = Math.max(r,g,b), mn = Math.min(r,g,b), d = mx - mn;
+    let hh = 0;
+    if (d){
+      if (mx === r) hh = ((g - b)/d + (g < b ? 6 : 0));
+      else if (mx === g) hh = (b - r)/d + 2;
+      else hh = (r - g)/d + 4;
+      hh *= 60;
+    }
+    const l = (mx + mn)/2;
+    return [hh, d ? d / (1 - Math.abs(2*l - 1)) : 0, l];
+  }
+  function fromHSL(hh,s,l){
+    s = Math.max(0, Math.min(1, s)); l = Math.max(0, Math.min(1, l));
+    const c = (1 - Math.abs(2*l - 1)) * s, x = c * (1 - Math.abs(((hh/60) % 2) - 1)), m = l - c/2;
+    let r=0,g=0,b=0;
+    const seg = Math.floor((((hh % 360) + 360) % 360) / 60);
+    if (seg===0){r=c;g=x;} else if (seg===1){r=x;g=c;} else if (seg===2){g=c;b=x;}
+    else if (seg===3){g=x;b=c;} else if (seg===4){r=x;b=c;} else {r=c;b=x;}
+    return toHex((r+m)*255, (g+m)*255, (b+m)*255);
+  }
+  function clampL(hex, lo, hi){
+    const p = toHSL(hex);
+    return fromHSL(p[0], p[1], Math.max(lo, Math.min(hi, p[2])));
+  }
+  function shiftL(hex, d){
+    const p = toHSL(hex);
+    return fromHSL(p[0], p[1], p[2] + d);
+  }
+  function setL(hex, l, sMul){
+    const p = toHSL(hex);
+    return fromHSL(p[0], p[1] * (sMul === undefined ? 1 : sMul), l);
+  }
+  function mix(a, b, t){
+    const A = toRGB(a), B = toRGB(b);
+    return toHex(A[0]+(B[0]-A[0])*t, A[1]+(B[1]-A[1])*t, A[2]+(B[2]-A[2])*t);
+  }
+  function isDark(hex){ return toHSL(hex)[2] < .45; }
+  function gradN(cols, angle){
+    const n = cols.length;
+    const stops = cols.map((c,i) => c + ' ' + Math.round(i / (n - 1) * 100) + '%');
+    return 'linear-gradient(' + angle + 'deg,' + stops.join(',') + ')';
+  }
+
+  function applyGradient(){
+    const byDark = grad.cols.slice().sort((a,b) => toHSL(a)[2] - toHSL(b)[2]);
+    const dark = isDark(grad.bg);
+    const accent = grad.textOn ? grad.accent : clampL(byDark[0], .20, .46);
+    const ink = grad.textOn ? grad.ink : '#2A2233';
+    const bg = grad.textOn ? grad.bg : '#FAFAFB';
+    const surface = grad.textOn && dark ? shiftL(bg, .06) : '#FFFFFF';
+
+    const g = gradN(grad.cols, grad.angle);
+    root.style.setProperty('--grad-cta', g);
+    root.style.setProperty('--grad-add', g);
+    root.style.setProperty('--violet', accent);
+    root.style.setProperty('--violet-dark', shiftL(accent, dark ? .09 : -.09));
+    root.style.setProperty('--violet-tint', dark ? mix(surface, ink, .12) : mix(surface, ink, .045));
+    root.style.setProperty('--magenta', accent);
+    root.style.setProperty('--bg', bg);
+    root.style.setProperty('--surface', surface);
+    root.style.setProperty('--ink', ink);
+    root.style.setProperty('--ink-muted', mix(ink, surface, .35));
+    root.style.setProperty('--ink-faint', mix(ink, surface, .58));
+    root.style.setProperty('--line', mix(surface, ink, .12));
+    root.style.setProperty('--line-soft', mix(surface, ink, .05));
+    const avg = cols => cols.reduce((s,c) => s + toHSL(c)[2], 0) / cols.length;
+    const onAdd = avg(grad.cols) > .68 ? mix(ink, '#000000', .1) : '#FFFFFF';
+    root.style.setProperty('--on-add', onAdd);
+    root.style.setProperty('--on-cta', onAdd);
+    root.style.setProperty('--on-add-chip', onAdd === '#FFFFFF' ? 'rgba(255,255,255,.22)' : 'rgba(58,52,54,.10)');
+    const r = grad.radius;
+    root.style.setProperty('--r-card', r + 'px');
+    root.style.setProperty('--r-thumb', Math.round(r * .72) + 'px');
+    root.style.setProperty('--r-btn', Math.round(r * .7) + 'px');
+    root.style.setProperty('--r-tile', Math.round(r * .8) + 'px');
+    root.style.setProperty('--r-sm', Math.round(r * .55) + 'px');
+    root.style.setProperty('--r-md', Math.round(r * .7) + 'px');
+    root.style.setProperty('--r-lg', r + 'px');
+    const mid = grad.cols[Math.floor(grad.cols.length / 2)];
+    root.style.setProperty('--script', clampL(mid, .52, .72));
+    root.style.setProperty('--petal', setL(grad.cols[0], .93, .55));
+    root.style.setProperty('--petal-core', setL(mid, .86, .5));
+    root.style.setProperty('--ring-a', accent);
+    root.style.setProperty('--ring-b', accent);
+  }
+
+  Object.keys(FIXED).forEach(k => root.setAttribute('data-' + k, FIXED[k]));
+  Object.keys(state).forEach(k => root.setAttribute('data-' + k, state[k]));
+  root.setAttribute('data-art', grad.art ? '1' : '0');
+  applyGradient();
+})();
+</script>
+
+<!-- "Už nic nechci" — odmítnutí nabídky -->
+<script>
+document.getElementById('declineBtn').addEventListener('click', () => {
+  document.getElementById('declineOfferWrap').hidden = true;
+  document.getElementById('showAgainWrap').hidden = false;
+  document.getElementById('offerSection').hidden = true;
+  document.getElementById('storySection').hidden = true;
+  document.getElementById('summary').hidden = true;
+  document.getElementById('declineResult').hidden = false;
+
+  /* Poznámka pro reálnou implementaci na Shoptetu:
+     tady se má podle způsobu platby rozhodnout, co se ukáže dál —
+     u platby kartou rovnou QR/potvrzení plateb. u dobírky jen tenhle
+     text bez QR (nic se nedoplácí). Tenhle prototyp platební metodu
+     nezná, proto se vždy zobrazí jen text bez QR. */
+});
+
+document.getElementById('showAgainBtn').addEventListener('click', () => {
+  document.getElementById('declineResult').hidden = true;
+  document.getElementById('showAgainWrap').hidden = true;
+  document.getElementById('declineOfferWrap').hidden = false;
+  document.getElementById('offerSection').hidden = false;
+  document.getElementById('storySection').hidden = false;
+  document.getElementById('summary').hidden = false;
+});
+</script>
+</body>
+</html>
