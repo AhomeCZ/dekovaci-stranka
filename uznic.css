@@ -17,15 +17,18 @@
 }
 /* Stejný styl jako tlačítko "Upravit" (.edit-btn) v horním pruhu. */
 .decline-btn{
-  display:inline-flex;align-items:center;justify-content:center;
-  height:46px;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  height: 54px;
   padding:0 18px;
   border:1.5px solid var(--line);
   border-radius:999px;
   background:var(--surface);
   color:var(--violet);
   font-family:'Poppins',system-ui,sans-serif;
-  font-size:.75rem;font-weight:600;
+  font-size:.75rem;
+  font-weight:600;
   cursor:pointer;
   transition:border-color .16s ease,background .16s ease,transform .12s ease;
 }

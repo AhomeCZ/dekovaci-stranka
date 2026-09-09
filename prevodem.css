@@ -88,3 +88,291 @@
   }
   .payment-card .pay-rows div{padding:4px 0;}
 }
+
+/* -------------------------------------------------------------
+   DVĚ CESTY K ZAPLACENÍ
+   Kdo platí v mobilu, načte QR. Kdo sedí u počítače, opíše údaje —
+   a právě opisování je místo, kde vzniká většina chyb v platbě,
+   proto má každý údaj tlačítko na zkopírování.
+   ------------------------------------------------------------- */
+.pay-col-label{
+  margin:0 0 8px;
+  font-family:'Poppins',system-ui,sans-serif;
+  font-size:.82rem;
+  font-weight:700;
+  color:#241B3D;
+}
+.pay-col-hint{
+  margin:8px 0 0;
+  font-size:.76rem;
+  line-height:1.35;
+  color:var(--ink-faint);
+  min-height:1.05em;
+}
+
+.pay-rows dd{
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.pay-copy{
+  flex:0 0 auto;
+  display:inline-grid;
+  place-items:center;
+  width:30px;height:30px;
+  padding:0;
+  border:1px solid var(--line);
+  border-radius:9px;
+  background:var(--surface);
+  color:var(--violet);
+  cursor:pointer;
+  transition:border-color .15s ease,color .15s ease;
+}
+.pay-copy svg{width:16px;height:16px;}
+.pay-copy:hover{border-color:var(--violet);}
+.pay-copy.is-done{
+  border-color:var(--violet);
+  background:var(--violet-tint);
+}
+
+/* Rozloučení pod platbou — stejná karta jako po odmítnutí nabídky,
+   jen s vlastním textovým blokem, ať do něj nesahá theme JS. */
+.payment-done-copy{
+  position:relative;
+  z-index:1;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+  gap:6px;
+  min-width:0;
+}
+.payment-done-copy strong{
+  font-family:'Poppins',system-ui,sans-serif;
+  font-size:1.08rem;
+  font-weight:800;
+  line-height:1.2;
+  color:#241B3D;
+}
+.payment-done-copy span{
+  font-size:.82rem;
+  line-height:1.4;
+  color:var(--ink-muted);
+  max-width:26ch;
+}
+.payment-done-copy .decline-shop-link{
+  margin-top:6px;
+  width:100%;
+  padding:0 16px;
+}
+
+@media (min-width:640px){
+  .payment-card-pay{align-items:flex-start;}
+  .pay-col--qr{text-align:center;}
+  .pay-col--manual{flex:1 1 320px;max-width:360px;}
+  .payment-done-copy{align-items:flex-end;text-align:right;}
+  .payment-done-copy strong{font-size:1.32rem;}
+  .payment-done-copy span{font-size:.92rem;max-width:32ch;}
+  .payment-done-copy .decline-shop-link{width:auto;}
+}
+
+/* Text u e-mailu je delší než jinde ("QR kód a platební údaje jsme
+   poslali na …") — styles.css ho jinak ořízne třemi tečkami. */
+.confirm-mail > span{
+  white-space:normal !important;
+  overflow:visible !important;
+  text-overflow:clip !important;
+  line-height:1.35;
+}
+
+/* =============================================================
+   MINIMALISTICKÁ VERZE — stránka má jediný úkol: dát zaplatit.
+   Žádný odpočet, žádná nabídka, žádné přilepené tlačítko.
+   ============================================================= */
+
+}
+.confirm-mail > span{
+  white-space:normal !important;
+  overflow:visible !important;
+  text-overflow:clip !important;
+  line-height:1.35;
+}
+
+/* Platební karta je dominanta stránky */
+.page--prevodem .payment-card{
+  margin-top:14px;
+  padding:26px 20px 22px;
+  text-align:center;
+}
+.page--prevodem .payment-card h2{
+  margin:0 0 18px;
+  font-size:1.42rem;
+  line-height:1.2;
+}
+@media (min-width:640px){
+  .page--prevodem .payment-card{padding:34px 30px 28px;}
+  .page--prevodem .payment-card h2{font-size:1.75rem;}
+}
+
+/* Velký QR — hlavní prvek, ne dekorace */
+.qr--big{
+  width:min(272px,72vw);
+  height:min(272px,72vw);
+  margin:0 auto 20px;
+  padding:14px;
+}
+@media (min-width:640px){
+  .qr--big{width:300px;height:300px;}
+}
+
+/* Údaje pod kódem: klidná tabulka, bez barevného pozadí */
+.page--prevodem .pay-rows{
+  max-width:420px;
+  margin:0 auto;
+  background:transparent;
+  padding: 16px;
+  text-align:left;
+  font-size:.95rem;
+}
+.page--prevodem .pay-rows div{
+  align-items:center;
+  padding:11px 2px;
+  border-top:1px solid var(--line-soft);
+}
+.page--prevodem .pay-rows div:first-child{border-top:0;}
+.page--prevodem .pay-rows dt{font-size:.88rem;}
+.page--prevodem .pay-rows dd{font-size:1.02rem;}
+
+.pay-status{
+  margin:12px 0 0;
+  font-size:.78rem;
+  color:var(--ink-faint);
+  min-height:1.05em;
+}
+
+/* Odchod ze stránky — obyčejný odkaz, ne další tlačítko */
+.back-link{
+  margin:22px 0 0;
+  text-align:center;
+  font-size:.9rem;
+}
+.back-link a{
+  color:var(--violet);
+  text-decoration:underline;
+  text-underline-offset:3px;
+}
+
+/* Potvrzovací pruh má na téhle stránce o řádek víc (číslo objednávky),
+   takže původní flex rozvržení nestačí — mřížka drží ikonu vlevo,
+   tužku vpravo a tři řádky textu mezi nimi. */
+.page--prevodem .confirm{
+  display:grid !important;
+  grid-template-columns:auto minmax(0,1fr) auto;
+  grid-template-areas:
+    "check title edit"
+    "check mail  edit";
+  align-items:center;
+  column-gap:11px;
+  row-gap:1px;
+}
+.page--prevodem .confirm-check{grid-area:check;}
+.page--prevodem .confirm h1{
+  grid-area:title;
+  white-space:normal !important;
+  font-size:1.05rem;
+}
+.page--prevodem .confirm-mail{grid-area:mail;margin-top:3px !important;}
+.page--prevodem .edit-btn{grid-area:edit;}
+.page--prevodem .mail-edit{grid-column:1 / -1;margin-top:10px;}
+@media (min-width:640px){
+  .page--prevodem .confirm h1{font-size:1.22rem;}
+}
+
+/* -------------------------------------------------------------
+   Zmenšení textů — karta byla po osekání zbytku stránky
+   nepřiměřeně velká. A "Zpět do obchodu" zpátky jako tlačítko
+   s přechodem, ne jako holý odkaz.
+   ------------------------------------------------------------- */
+.page--prevodem .confirm h1{font-size:.95rem !important;line-height:1.3;}
+.page--prevodem .confirm-mail{font-size:.78rem !important;}
+
+.page--prevodem .payment-card{padding:20px 18px 18px;}
+.page--prevodem .payment-card h2{
+  font-size:1.12rem !important;
+  margin-bottom:14px;
+}
+.qr--big{
+  width:min(220px,58vw);
+  height:min(220px,58vw);
+  margin-bottom:16px;
+  padding:11px;
+}
+.page--prevodem .pay-rows{font-size:.88rem;}
+.page--prevodem .pay-rows div{padding:9px 2px;}
+.page--prevodem .pay-rows dt{font-size:.8rem;}
+.page--prevodem .pay-rows dd{font-size:.92rem;}
+
+@media (min-width:640px){
+  .page--prevodem .confirm h1{font-size:1.05rem !important;}
+  .page--prevodem .payment-card{padding:26px 26px 22px;}
+  .page--prevodem .payment-card h2{font-size:1.3rem !important;}
+  .qr--big{width:236px;height:236px;}
+}
+
+/* Tlačítko zpět — stejný přechod jako ostatní hlavní tlačítka,
+   takže se přebarví i v zelené variantě. */
+.back-link{margin-top:20px;}
+.back-link a{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:44px;
+  padding:0 22px;
+  border-radius:999px;
+  background:var(--grad-cta);
+  color:var(--on-cta,#fff) !important;
+  font-family:'Poppins',system-ui,sans-serif;
+  font-size:.92rem;
+  font-weight:600;
+  text-decoration:none;
+  box-shadow:0 4px 16px rgba(58,52,54,.16);
+}
+.back-link a:hover{filter:brightness(1.06);}
+
+/* IBAN je dlouhý — na mobilu se musí vejít, jinak by rozjel řádek.
+   Menší písmo a zalomení až za skupinou číslic. */
+.pay-iban{
+  font-size:.86em;
+  letter-spacing:-.01em;
+  word-spacing:-.06em;
+  white-space:nowrap;
+}
+@media (max-width:380px){
+  .pay-iban{font-size:.78em;}
+}
+
+/* ---- Uložení QR do telefonu -------------------------------------
+   Sekundární akce pod QR: kdo platí z jiného zařízení, potřebuje kód
+   nejdřív dostat do fotek. Obrysové, ať nepřebíjí samotný QR. */
+.qr-save{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:8px;
+  /* Pod tlačítkem musí být mezera, jinak se lepí na tabulku
+     s platebními údaji a čte se to jako jeden blok. */
+  margin:16px auto 20px;
+  padding:0 18px;
+  height:44px;
+  border:1.5px solid var(--line);
+  border-radius:999px;
+  background:var(--surface);
+  color:var(--violet);
+  font-family:inherit;
+  font-size:.9rem;
+  font-weight:600;
+  cursor:pointer;
+  transition:border-color .16s ease,background-color .16s ease;
+}
+.qr-save svg{width:18px;height:18px;flex:0 0 auto;}
+.qr-save:hover{border-color:var(--violet);background-color:var(--violet-tint);}
+.qr-save.is-error{border-color:var(--magenta);color:var(--magenta);}

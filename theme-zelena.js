@@ -60,10 +60,15 @@
   }
 
   /* Děkovací karta po odmítnutí nabídky / uzavření objednávky. */
+  /* Stránka si může texty držet vlastní (u převodu se ještě neplatilo,
+     takže "Už balíme" by byla nepravda) — pozná se podle atributu. */
+  const vlastniTexty = !!document.querySelector('.decline-done[data-vlastni-texty]');
   const nadpisDik = document.getElementById('declineHeadline');
   const textDik = document.querySelector('.decline-done-copy span');
-  if (nadpisDik) nadpisDik.textContent = TEXTY.dekujemeNadpis;
-  if (textDik) textDik.textContent = TEXTY.dekujemeText;
+  if (!vlastniTexty){
+    if (nadpisDik) nadpisDik.textContent = TEXTY.dekujemeNadpis;
+    if (textDik) textDik.textContent = TEXTY.dekujemeText;
+  }
 
   /* Hotovo — odkrýt text a maskota (do teď schované v theme-zelena.css,
      aby neproblikly původní růžové texty). */
@@ -76,7 +81,7 @@
     const puvodni = window.showThanks;
     window.showThanks = function(headline){
       puvodni(headline);
-      if (nadpisDik && (!headline || headline.indexOf('V pořádku') === 0)){
+      if (nadpisDik && !vlastniTexty){
         nadpisDik.textContent = TEXTY.dekujemeNadpis;
       }
     };

@@ -365,7 +365,7 @@ button,input{font:inherit;color:inherit;}
 .total{flex:0 0 auto;text-align:right;}
 .total span{display:block;font-size:.75rem;color:var(--ink-muted);}
 .total strong{display:block;font-size:1.5rem;font-weight:800;color:var(--magenta);letter-spacing:-.015em;}
-.total.bump{animation:bump .26s cubic-bezier(.34,1.56,.64,1);}
+.cta.bump{animation:bump .26s cubic-bezier(.34,1.56,.64,1);}
 @keyframes bump{50%{transform:scale(1.08);}}
 
 .cta{
@@ -3767,3 +3767,239 @@ html[data-palette] .item{border-radius:14px;}
 a,button{
   -webkit-tap-highlight-color:transparent;
 }
+
+/* Tlačítko "Nechci" bylo v kartě "Mňau tip", teď sedí ve spodní liště
+   vedle hlavního tlačítka. Řádek je drží vedle sebe; na mobilu si CTA
+   vezme zbylou šířku, od tabletu výš jde dvojice doprava jako dřív
+   samotné CTA. */
+.cta-row{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-top:10px;
+}
+.cta-row .decline-offer{
+  flex:0 0 auto;
+  margin:0;
+}
+.cta-row .cta{
+  flex:1 1 auto;
+  width:auto;
+  margin:0;
+}
+@media (min-width:700px){
+  .cta-row{
+    order:5;
+    flex:0 0 auto;
+    width:auto;
+    margin:0 0 0 auto;
+  }
+  .cta-row .cta{flex:0 0 auto;}
+}
+
+/* Objednávku musí jít uzavřít i s prázdným košíkem, tedy za 0 Kč —
+   hlavní tlačítko se proto při prázdném košíku už neschovává.
+   Částka naopak zůstává skrytá, dokud se něco nepřidá (nulový
+   doplatek je prázdná informace). */
+.summary[data-state="empty"] .cta{display:flex;}
+
+/* ============================================================
+   SPODNÍ LIŠTA NA MOBILU — tři řádky
+   1) odpočet + stav krabičky   2) částka   3) hlavní tlačítko
+   Texty se dřív ořezávaly třemi tečkami ("Krabička je o…"), protože
+   se všechno mačkalo na jeden řádek. Menší písmo + zalomení řádku
+   s částkou to srovná. Odpočet zůstává největší, je nejdůležitější.
+   ============================================================ */
+@media (max-width:699px){
+  .summary-top{
+    flex-wrap:wrap;
+    row-gap:2px;
+  }
+
+  /* 1. řádek: text stavu se už neořezává, jen zmenší */
+  .summary-note{
+    flex:1 1 auto;
+    min-width:0;
+  }
+  .summary-note strong,
+  .summary-note span{
+    white-space:normal !important;
+    overflow:visible !important;
+    text-overflow:clip !important;
+  }
+  .summary-note strong{font-size:.88rem !important;line-height:1.25;}
+  .summary-note span{font-size:.72rem !important;line-height:1.2;}
+
+  /* 3. řádek: tlačítko, o něco nižší, ať se lišta nerozrostla */
+  .cta-row{margin-top:8px;}
+  .cta{min-height:44px;padding:8px 16px;font-size:.95rem;}
+
+  /* kočka v liště bere místo textu — menší a mimo tok */
+  .summary .cat-fx{width:74px;}
+}
+
+/* Jakmile je něco v košíku (tlačítko ukazuje částku), kočka odletí
+   k pravému okraji lišty, ať nestojí hned vedle odpočtu. JS ji vkládá
+   jako první prvek, takže kromě odsazení potřebuje i jiné pořadí. */
+.summary[data-state="filled"] .cat-fx{
+  order:9;
+  margin-left:auto !important;
+  margin-right:0 !important;
+}
+
+/* "Nechci" je obrysové tlačítko stejně jako tužka u úpravy e-mailu.
+   Je to sekundární akce — nemá vypadat stejně silně jako přidání
+   do košíku ani jako hlavní tlačítko v liště. */
+#declineBtn,
+#declineBtn:hover,
+#declineBtn:focus-visible,
+#hideOfferBtn,
+#hideOfferBtn:hover,
+#hideOfferBtn:focus-visible{
+  background-image:none !important;
+  background-color:var(--surface) !important;
+  border:1.5px solid var(--line) !important;
+  color:var(--violet) !important;
+  text-shadow:none !important;
+}
+#declineBtn:hover,
+#hideOfferBtn:hover{
+  border-color:var(--violet) !important;
+}
+
+/* "Odebrat vše" v rozbaleném košíku — tichý textový odkaz vedle
+   počtu položek. Řeší situaci, kdy si člověk přidal víc věcí a chce
+   začít znovu, aniž by je odklikával po jedné. */
+.cart-panel-head{
+  display:flex;
+  align-items:baseline;
+  gap:10px;
+}
+.cart-clear{
+  margin-left:auto;
+  padding:2px 0;
+  border:0;
+  background:none;
+  color:var(--ink-muted);
+  font-family:'Poppins',system-ui,sans-serif;
+  font-size:.78rem;
+  text-decoration:underline;
+  text-underline-offset:3px;
+  cursor:pointer;
+}
+.cart-clear:hover{color:var(--violet);}
+
+/* Pruh "Mňau tip" má display:flex, a ten přebije [hidden]{display:none}
+   z prohlížeče. Po rozhodnutí musí zmizet, jinak se zákazníkovi nad
+   děkovací kartou pořád nabízí, co si má přibalit. */
+.tip[hidden]{display:none !important;}
+
+/* ---- Galerie v detailu produktu ---------------------------------
+   Fotek je víc než jedna, listuje se palcem do strany. Snap zajistí,
+   že se strip vždy zastaví přesně na fotce, tečky ukazují kolikátá
+   to je a dají se i naklikat (kvůli myši, palcem se listuje přímo). */
+.product-gallery{
+  position:relative;
+  border-radius:15px 15px 0 0;
+  overflow:hidden;
+}
+.product-slides{
+  display:flex;
+  overflow-x:auto;
+  scroll-snap-type:x mandatory;
+  -webkit-overflow-scrolling:touch;
+  scrollbar-width:none;
+}
+.product-slides::-webkit-scrollbar{display:none;}
+.product-slides .product-detail-img{
+  flex:0 0 100%;
+  scroll-snap-align:center;
+  border-radius:0;
+  /* Fotka vyplní celý rámec — "contain" nechával po stranách
+     světlé pruhy a rušily oko. */
+  object-fit:cover;
+  background:none;
+}
+
+/* ---- "Nechci" v pruhu Mňau tip ----------------------------------
+   Stejné tlačítko jako "Nechci" ve spodní liště — bere si třídu
+   .decline-btn i pravidlo pro #declineBtn, aby se vzhled těch dvou
+   nikdy nerozešel. Tady se jen zmenší, ať se vejde vedle textu. */
+.tip-hide{
+  flex:0 0 auto;
+  margin-left:auto;
+  height:38px;
+  padding:0 14px;
+  font-size:.72rem;
+}
+@media (max-width:380px){
+  .tip-hide{height:34px;padding:0 11px;font-size:.68rem;}
+}
+
+/* ---- Šipky galerie ----------------------------------------------
+   Kvůli myši na desktopu — palcem se listuje přímo. Sedí uvnitř
+   fotky, aby nezvětšovaly modál, a v krajní poloze zešednou. */
+.gal-arrow{
+  position:absolute;
+  top:50%;
+  transform:translateY(-50%);
+  display:flex;align-items:center;justify-content:center;
+  width:34px;height:34px;
+  padding:0;border:0;border-radius:999px;
+  background:rgba(255,255,255,.9);
+  color:var(--violet);
+  box-shadow:0 2px 8px rgba(60,25,80,.22);
+  cursor:pointer;
+  transition:background .15s ease,opacity .15s ease;
+}
+.gal-arrow svg{width:18px;height:18px;}
+.gal-arrow--prev{left:8px;}
+.gal-arrow--next{right:8px;}
+.gal-arrow:hover{background:#fff;}
+.gal-arrow:disabled{opacity:.35;cursor:default;}
+@media (prefers-reduced-motion:reduce){
+  .gal-arrow{transition:none;}
+}
+
+/* ---- Platební brána v prototypu ---------------------------------
+   Statická stránka přesměrovat neumí, takže se místo brány ukáže
+   její snímek přes celou kartu. Klepnutí kamkoli na něj zastupuje
+   zaplacení, křížek vpravo nahoře je návrat k objednávce. */
+.brana{
+  position:relative;
+  width:min(92vw,420px);
+  max-height:88vh;
+  overflow:auto;
+  border-radius:var(--r-lg);
+  background:#fff;
+  box-shadow:0 18px 60px rgba(40,15,60,.35);
+}
+.brana-plocha{
+  display:block;
+  width:100%;
+  padding:0;border:0;
+  background:none;
+  cursor:pointer;
+}
+.brana-plocha img{display:block;width:100%;height:auto;}
+.brana .modal-x{
+  position:absolute;top:10px;right:10px;z-index:2;
+  background:rgba(255,255,255,.92);
+  box-shadow:0 2px 8px rgba(60,25,80,.2);
+}
+
+/* ---- Detail produktu: menší texty -------------------------------
+   Nadpis běžel na 1.49rem jako nadpisy sekcí, což v malém okně
+   ukrajovalo místo fotce a popisu. Je to jen doplněk k objednávce,
+   nemusí křičet — hlavní je vidět fotku a cenu. */
+.product-detail-copy h2{
+  font-size:1.08rem;
+  line-height:1.25;
+}
+.product-detail-copy p{
+  font-size:.85rem;
+  line-height:1.45;
+}
+.product-detail-copy .price{font-size:1.15rem;}
+.product-detail-copy .price-old{font-size:.78rem;}
+.product-detail-copy .prices{margin-top:var(--s3);}

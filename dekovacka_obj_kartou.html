@@ -108,14 +108,7 @@
       <strong>Mňau tip: Přibalit? <svg class="heading-paw" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#i-paw"/></svg></strong>
       <span>Vejde se tam ještě něco!</span>
     </span>
-    <!-- 3a ▸ ODMÍTNUTÍ NABÍDKY -->
-    <p class="decline-offer" id="declineOfferWrap">
-      <button class="decline-btn" id="declineBtn" type="button">Nechci</button>
-    </p>
-    <!-- 3b ▸ NÁVRAT K NABÍDCE (skryté, dokud nekliknete na Nechci) -->
-    <p class="decline-offer" id="showAgainWrap" hidden>
-      <button class="decline-btn" id="showAgainBtn" type="button">Chci</button>
-    </p>
+    <button class="decline-btn tip-hide" id="hideOfferBtn" type="button">Nechci</button>
   </div>
 
   <!-- 3c ▸ STAV PO ODMÍTNUTÍ (skryté, dokud nekliknete výš) -->
@@ -127,8 +120,8 @@
 
       <img class="mascot mascot--tip" src="assets/krabicka.png" alt="">
       <div class="decline-done-copy">
-        <strong>V pořádku, nic dalšího nepřibalujeme 🐾</strong>
-        <span>Objednávku už pro vás chystáme, brzy vyrazí na cestu. Díky, že nakupujete u nás!</span>
+        <strong id="declineHeadline">Díky! Balíme 🐾</strong>
+        <span>Objednávku už chystáme, brzy vyrazí k vám.</span>
         <a class="decline-btn decline-shop-link" href="#">← Zpět do obchodu</a>
       </div>
     </div>
@@ -176,10 +169,6 @@
             <svg class="paw" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#i-paw"/></svg>
           </div>
         </div>
-        <div class="summary-note">
-          <strong>Krabička je otevřená</strong>
-          <span id="noteSub">Ještě můžete něco přidat.</span>
-        </div>
         <div class="total">
           <span>K doplacení:</span>
           <strong id="total">0 Kč</strong>
@@ -193,39 +182,40 @@
           <div class="cart-panel-head">
             <strong>Přidané produkty</strong>
             <span id="cartCount">0 položek</span>
+            <button class="cart-clear" id="cartClear" type="button">Odebrat vše</button>
           </div>
           <div class="cart-items" id="cartItems" aria-live="polite"></div>
         </div>
       </div>
-      <button class="cta" id="cta" type="button">
-        <span id="ctaText">Doplatit 0 Kč</span>
+      <div class="cta-row">
+        <!-- "Nechci" vlevo od hlavního tlačítka -->
+        <p class="decline-offer" id="declineOfferWrap">
+          <button class="decline-btn" id="declineBtn" type="button">Nechci</button>
+        </p>
+        <button class="cta" id="cta" type="button">
+        <span id="ctaText">Nic nepřibalím</span>
         <svg aria-hidden="true"><use href="#i-chev"/></svg>
-      </button>
+        </button>
+      </div>
     </div>
   </aside>
 
 </main>
 
-<!-- QR PLATBA -->
+<!-- DOPLATEK — objednávka je zaplacená kartou, takže se doplatek platí
+     stejnou cestou: platební bránou. Statická stránka přesměrovat neumí,
+     takže je tu snímek brány; klepnutí na něj zastupuje zaplacení.
+     Na Shoptetu se místo toho přesměruje na bránu doopravdy. -->
 <div class="backdrop" id="backdrop" hidden>
-  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="qrTitle">
-    <button class="modal-x" id="qrX" type="button" aria-label="Zavřít">
+  <div class="brana" role="dialog" aria-modal="true" aria-label="Platební brána">
+    <button class="modal-x" id="qrX" type="button" aria-label="Zpět na objednávku">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
         <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
       </svg>
     </button>
-    <h2 id="qrTitle">Ještě doplatek a balíme</h2>
-    <p class="sub">Načtěte kód v aplikaci své banky. Jakmile platba dorazí, věci přibalíme do krabičky.</p>
-
-    <div class="qr" id="qrBox"></div>
-
-    <dl class="pay-rows">
-      <div><dt>Částka</dt><dd id="qrAmount">0 Kč</dd></div>
-      <div><dt>Variabilní symbol</dt><dd>1415697</dd></div>
-      <div><dt>Zaplatit do</dt><dd id="qrDeadline">14:58</dd></div>
-    </dl>
-
-    <button class="modal-close" id="qrClose" type="button">Zavřít</button>
+    <button class="brana-plocha" id="qrPay" type="button" aria-label="Zaplatit v platební bráně">
+      <img src="assets/platebni-brana.png" alt="Platební brána">
+    </button>
   </div>
 </div>
 
@@ -237,7 +227,15 @@
         <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
       </svg>
     </button>
-    <img class="product-detail-img" id="productDetailImg" alt="">
+    <div class="product-gallery">
+      <div class="product-slides" id="productSlides"></div>
+      <button class="gal-arrow gal-arrow--prev" id="galPrev" type="button" aria-label="Předchozí fotka">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M15 5l-7 7 7 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+      <button class="gal-arrow gal-arrow--next" id="galNext" type="button" aria-label="Další fotka">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M9 5l7 7-7 7" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </div>
     <div class="product-detail-copy">
       <h2 id="productTitle"></h2>
       <p id="productDescription"></p>
@@ -305,17 +303,16 @@ const products = [
 
 const grid     = document.getElementById('grid');
 const sentinel = document.getElementById('sentinel');
-const totalEl  = document.getElementById('total');
 const summary  = document.getElementById('summary');
 const cta      = document.getElementById('cta');
+const totalEl  = document.getElementById('total');
 const ctaText  = document.getElementById('ctaText');
-const noteSub  = document.getElementById('noteSub');
 const summaryTop = document.querySelector('.summary-top');
 const summaryToggle = document.getElementById('summaryToggle');
 const cartItems = document.getElementById('cartItems');
 const cartCount = document.getElementById('cartCount');
 const productBackdrop = document.getElementById('productBackdrop');
-const productDetailImg = document.getElementById('productDetailImg');
+const productSlides = document.getElementById('productSlides');
 const productTitle = document.getElementById('productTitle');
 const productDescription = document.getElementById('productDescription');
 const productPrice = document.getElementById('productPrice');
@@ -405,11 +402,21 @@ function updateBar(){
 }
 addEventListener('scroll', updateBar, {passive:true});
 
+/* Vysype košík a srovná karty produktů i lištu. Používá to
+   "Nechci" (nechci nic přibalit) i "Odebrat vše" v košíku —
+   po obou musí být stav vidět, ne jen spočítaný jinak. */
+function vysypKosik(){
+  const bylo = [...cart.keys()];
+  cart.clear();
+  bylo.forEach(i => updateCard(i));
+  expanded = false;
+  refresh();
+}
 function refresh(){
   count = [...cart.values()].reduce((sum, qty) => sum + qty, 0);
   total = [...cart.entries()].reduce((sum, [index, qty]) => sum + products[index].p * qty, 0);
   totalEl.textContent = total + ' Kč';
-  ctaText.textContent = 'Doplatit ' + total + ' Kč';
+  ctaText.textContent = count ? 'Přibalit a zaplatit' : 'Nic nepřibalím';
   summary.dataset.state = count ? 'filled' : 'empty';
   summaryToggle.hidden = !count;
   summaryToggle.setAttribute('aria-expanded', String(expanded && !!count));
@@ -417,9 +424,6 @@ function refresh(){
   summary.classList.toggle('is-expanded', expanded && !!count);
   cartCount.textContent = count + ' ' + (count === 1 ? 'položka' : (count >= 2 && count <= 4 ? 'položky' : 'položek'));
   renderCart();
-  setNote(count
-    ? (count === 1 ? 'Jedna věc čeká na přibalení.' : count + ' věci čekají na přibalení.')
-    : 'Ještě můžete něco přidat.');
 }
 
 function renderCart(){
@@ -451,15 +455,6 @@ function updateCard(index){
   button.setAttribute('aria-label', qty ? 'Přidat do košíku — v košíku ' + qty + ' ks' : 'Přidat do košíku');
 }
 
-/* d) text pod nadpisem — prolnutí 150 ms */
-function setNote(text){
-  if (noteSub.textContent === text) return;
-  noteSub.classList.add('is-fading');
-  setTimeout(() => {
-    noteSub.textContent = text;
-    noteSub.classList.remove('is-fading');
-  }, 150);
-}
 
 /* c) skok částky */
 function bumpTotal(){
@@ -553,6 +548,10 @@ products.forEach((item, i) => {
 
     /* Každé kliknutí přidá další kus stejného produktu. Odebrání je v souhrnu. */
     cart.set(i, (cart.get(i) || 0) + 1);
+    /* Rozbalený seznam se při přidání zavře — zabíral půl obrazovky
+       a překrýval zrovna to, co si člověk přidával. Stačí, že naskočí
+       částka v liště. */
+    expanded = false;
     updateCard(i);
     refresh();
     const firstItem = count === 1;
@@ -585,16 +584,67 @@ cartItems.addEventListener('click', e => {
   refresh();
 });
 
+document.getElementById('cartClear').addEventListener('click', vysypKosik);
+
 summaryToggle.addEventListener('click', () => {
   if (!count) return;
   expanded = !expanded;
   refresh();
 });
 
+/* ---------- galerie v detailu produktu ---------- */
+/* Skutečná fotka je zatím na produkt jen jedna, takže se opakuje.
+   Až jich bude víc, stačí sem místo jedné cesty poslat pole. */
+const POCET_FOTEK = 5;
+
+function vytvorGalerii(cesta, popis){
+  const fotky = Array.from({length: POCET_FOTEK}, () => cesta);
+  productSlides.innerHTML = fotky.map((src, i) =>
+    '<img class="product-detail-img" src="' + src + '" alt="' + popis + ' — fotka ' + (i + 1) + '">'
+  ).join('');
+  productSlides.scrollLeft = 0;
+  nastavAktivniFotku(0);
+}
+
+/* Která fotka je vidět. Index si držíme sami — dopočítávat ho ze
+   scrollLeft nešlo: během plynulého posunu chodí průběžné scroll
+   eventy ještě ze staré pozice a přepínaly tečku zpátky. */
+let fotkaIndex = 0;
+
+function nastavAktivniFotku(i){
+  fotkaIndex = i;
+  document.getElementById('galPrev').disabled = i <= 0;
+  document.getElementById('galNext').disabled = i >= productSlides.children.length - 1;
+}
+
+/* Posun na konkrétní fotku — používají to šipky i dojezd po swipu. */
+function posunNaFotku(i){
+  const max = productSlides.children.length - 1;
+  if (!productSlides.clientWidth || i < 0 || i > max) return;
+  nastavAktivniFotku(i);
+  productSlides.scrollTo({ left: i * productSlides.clientWidth, behavior: 'smooth' });
+}
+
+/* Po swipu prstem index dorovnáme podle skutečné pozice — až když
+   se posun zastaví, ať do toho průběžné eventy nemluví. */
+let casovacFotek;
+productSlides.addEventListener('scroll', () => {
+  clearTimeout(casovacFotek);
+  casovacFotek = setTimeout(() => {
+    if (!productSlides.clientWidth) return;
+    nastavAktivniFotku(Math.round(productSlides.scrollLeft / productSlides.clientWidth));
+  }, 120);
+});
+
+document.getElementById('galPrev').addEventListener('click', () => posunNaFotku(fotkaIndex - 1));
+document.getElementById('galNext').addEventListener('click', () => posunNaFotku(fotkaIndex + 1));
+
+
+
+
 function openProduct(index){
   const item = products[index];
-  productDetailImg.src = photos[index % photos.length];
-  productDetailImg.alt = item.n;
+  vytvorGalerii(photos[index % photos.length], item.n);
   productTitle.textContent = item.n;
   productDescription.textContent = item.d;
   productOldPrice.textContent = item.o + ' Kč';
@@ -662,52 +712,13 @@ setInterval(() => {
 
 /* ---------- QR platba ---------- */
 const backdrop   = document.getElementById('backdrop');
-const qrBox      = document.getElementById('qrBox');
-const qrAmount   = document.getElementById('qrAmount');
-const qrDeadline = document.getElementById('qrDeadline');
-
-/* náhodný kód v QR podobě — pro prototyp, ne skutečná platební data */
-function drawQR(){
-  const N = 25, m = [];
-  for (let y = 0; y < N; y++){
-    m[y] = [];
-    for (let x = 0; x < N; x++) m[y][x] = Math.random() > .52 ? 1 : 0;
-  }
-  /* poziční značky v rozích */
-  const finder = (ox, oy) => {
-    for (let y = 0; y < 7; y++)
-      for (let x = 0; x < 7; x++){
-        const edge = x === 0 || x === 6 || y === 0 || y === 6;
-        const core = x > 1 && x < 5 && y > 1 && y < 5;
-        m[oy + y][ox + x] = edge || core ? 1 : 0;
-      }
-    for (let y = -1; y < 8; y++)
-      for (let x = -1; x < 8; x++){
-        const py = oy + y, px = ox + x;
-        if (py < 0 || px < 0 || py >= N || px >= N) continue;
-        if (y === -1 || y === 7 || x === -1 || x === 7) m[py][px] = 0;
-      }
-  };
-  finder(0, 0); finder(N - 7, 0); finder(0, N - 7);
-
-  let path = '';
-  for (let y = 0; y < N; y++)
-    for (let x = 0; x < N; x++)
-      if (m[y][x]) path += 'M' + x + ' ' + y + 'h1v1h-1z';
-
-  qrBox.innerHTML =
-    '<svg viewBox="0 0 ' + N + ' ' + N + '" shape-rendering="crispEdges" role="img" aria-label="QR kód pro platbu">' +
-    '<path d="' + path + '" fill="#1E1726"/></svg>';
-}
 
 function openQR(){
-  if (!count) return;
-  drawQR();
-  qrAmount.textContent = total + ' Kč';
-  qrDeadline.textContent = clock.textContent;
+  /* Prázdný košík — není co doplácet, takže rovnou děkovací karta. */
+  if (!count){ showThanks('Díky! Balíme 🐾'); return; }
   backdrop.hidden = false;
   document.body.style.overflow = 'hidden';
-  document.getElementById('qrClose').focus();
+  document.getElementById('qrPay').focus();
 }
 function closeQR(){
   backdrop.hidden = true;
@@ -715,7 +726,12 @@ function closeQR(){
 }
 
 document.getElementById('cta').addEventListener('click', openQR);
-document.getElementById('qrClose').addEventListener('click', closeQR);
+document.getElementById('qrPay').addEventListener('click', () => {
+  /* Zastupuje zaplacení v bráně. Na Shoptetu se sem zákazník vrátí
+     až po skutečné platbě, návratovou URL musí mířit sem. */
+  closeQR();
+  showThanks('Díky! Balíme 🐾');
+});
 document.getElementById('qrX').addEventListener('click', closeQR);
 backdrop.addEventListener('click', e => { if (e.target === backdrop) closeQR(); });
 addEventListener('keydown', e => {
@@ -846,29 +862,33 @@ addEventListener('keydown', e => {
 
 <!-- "Už nic nechci" — odmítnutí nabídky -->
 <script>
-document.getElementById('declineBtn').addEventListener('click', () => {
+/* Finální obrazovka — děkovací karta místo nabídky. Používá ji
+   jak "Nechci", tak "Uzavřít objednávku". */
+function showThanks(headline){
   document.getElementById('declineOfferWrap').hidden = true;
-  document.getElementById('showAgainWrap').hidden = false;
+  /* Pruh "Mňau tip" i nabídka po rozhodnutí mizí natrvalo —
+     zpátky k nabídce se zákazník už nedostane. */
+  document.querySelector('.tip').hidden = true;
   document.getElementById('offerSection').hidden = true;
   document.getElementById('storySection').hidden = true;
   document.getElementById('summary').hidden = true;
   document.getElementById('declineResult').hidden = false;
+  if (headline) document.getElementById('declineHeadline').textContent = headline;
+  window.scrollTo({top:0, behavior:'smooth'});
+}
 
-  /* Poznámka pro reálnou implementaci na Shoptetu:
-     tady se má podle způsobu platby rozhodnout, co se ukáže dál —
-     u platby kartou rovnou QR/potvrzení plateb. u dobírky jen tenhle
-     text bez QR (nic se nedoplácí). Tenhle prototyp platební metodu
-     nezná, proto se vždy zobrazí jen text bez QR. */
+
+document.getElementById('declineBtn').addEventListener('click', () => {
+  vysypKosik();
+  showThanks('Díky! Balíme 🐾');
 });
 
-document.getElementById('showAgainBtn').addEventListener('click', () => {
-  document.getElementById('declineResult').hidden = true;
-  document.getElementById('showAgainWrap').hidden = true;
-  document.getElementById('declineOfferWrap').hidden = false;
-  document.getElementById('offerSection').hidden = false;
-  document.getElementById('storySection').hidden = false;
-  document.getElementById('summary').hidden = false;
+/* "Skrýt nabídku" nahoře dělá totéž co "Nechci" dole — posílá se
+   proto stejnou cestou, aby se ta dvě chování nikdy nerozešla. */
+document.getElementById('hideOfferBtn').addEventListener('click', () => {
+  document.getElementById('declineBtn').click();
 });
+
 </script>
 </body>
 </html>
