@@ -349,3 +349,11 @@ html .modal-close,
 html .product-detail-copy .modal-close{
   text-shadow:none !important;
 }
+
+/* -------------------------------------------------------------
+   11 ▸ STAVY PO NÁVRATU Z PLATEBNÍ BRÁNY
+   Ikona u nadpisu jede po zelené, ať tam nezůstane fialová.
+   ------------------------------------------------------------- */
+html .state-icon{
+  color:var(--z-accent)!important;
+}

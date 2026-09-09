@@ -4003,3 +4003,91 @@ a,button{
 .product-detail-copy .price{font-size:1.15rem;}
 .product-detail-copy .price-old{font-size:.78rem;}
 .product-detail-copy .prices{margin-top:var(--s3);}
+
+/* ---- Stavy po návratu z platební brány --------------------------
+   Zrušená platba, zamítnutá platba a vypršelá nabídka. Sdílí vzhled
+   děkovací karty (.decline-done), ale skládají se na výšku, aby text
+   dostal celou šířku — vedle maskota by se na 390 px lámal po dvou
+   slovech a zrovna tady je nejdůležitější, aby si zákazník přečetl,
+   že jeho objednávka je v pořádku. */
+.decline-done.state-card{
+  display:block;
+  padding:18px 16px 16px;
+  text-align:left;
+}
+.state-head{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  margin-bottom:8px;
+}
+.state-icon{
+  flex:0 0 auto;
+  width:26px;height:26px;
+  color:var(--violet);
+}
+.decline-done.state-card .state-text{
+  display:block;
+  max-width:38ch;      /* na 390 px vyjde na plnou šířku karty */
+  font-size:.9rem;
+  line-height:1.45;
+}
+.state-actions{
+  display:flex;
+  flex-direction:column;   /* na mobilu pod sebou — vedle sebe by se
+                              text tlačítek mačkal a hůř se trefovalo */
+  gap:10px;
+  margin-top:16px;
+}
+/* .cta si ze spodní lišty nese order:5 a levý margin — uvnitř karty
+   by kvůli tomu skončilo hlavní tlačítko pod vedlejším a odsazené
+   mimo kartu. Pořadí proto určuji natvrdo. */
+.state-actions .cta,
+.state-actions .decline-btn{
+  width:100%;
+  margin:0;
+  justify-content:center;
+}
+.state-actions .cta{order:1;}
+.state-actions .decline-btn{order:2;}
+.state-actions .decline-btn{height:48px;}
+.state-actions [hidden]{display:none !important;}
+
+/* ---- Ovládání prototypu v platební bráně ------------------------
+   Na ostré stránce nic takového není. Schválně vypadá jinak než
+   zbytek, ať si toho nikdo neplete s rozhraním brány. */
+.proto-controls{
+  border-top:1px dashed var(--line);
+  padding:12px 14px 14px;
+  background:#FAFAFC;
+  text-align:center;
+}
+.proto-label{
+  display:block;
+  margin-bottom:8px;
+  font-size:.7rem;
+  letter-spacing:.02em;
+  text-transform:uppercase;
+  color:var(--ink-muted);
+}
+.proto-buttons{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+  gap:8px;
+}
+.proto-buttons button{
+  flex:1 1 auto;
+  min-width:96px;
+  min-height:40px;
+  padding:0 12px;
+  border:1px solid var(--line);
+  border-radius:999px;
+  background:#fff;
+  color:var(--ink);
+  font-family:inherit;
+  font-size:.8rem;
+  font-weight:600;
+  cursor:pointer;
+}
+.proto-buttons button:hover{border-color:var(--violet);color:var(--violet);}

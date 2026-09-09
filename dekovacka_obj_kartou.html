@@ -70,6 +70,15 @@
       <circle cx="8.5" cy="10" r="1.5" fill="currentColor"/>
       <path d="M4 17l4.5-4.5 3 3L15 12l5 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
     </symbol>
+    <symbol id="i-state-info" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="9.2" stroke="currentColor" stroke-width="1.8" fill="none"/>
+      <path d="M12 7.4v5.4" stroke="currentColor" stroke-width="2.1" stroke-linecap="round"/>
+      <circle cx="12" cy="16.4" r="1.15" fill="currentColor"/>
+    </symbol>
+    <symbol id="i-state-clock" viewBox="0 0 24 24">
+      <circle cx="12" cy="12" r="9.2" stroke="currentColor" stroke-width="1.8" fill="none"/>
+      <path d="M12 7.2v5.2l3.3 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+    </symbol>
   </defs>
 </svg>
 
@@ -123,6 +132,26 @@
         <strong id="declineHeadline">Díky! Balíme 🐾</strong>
         <span>Objednávku už chystáme, brzy vyrazí k vám.</span>
         <a class="decline-btn decline-shop-link" href="#">← Zpět do obchodu</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3d ▸ STAV PO NÁVRATU Z PLATEBNÍ BRÁNY (skryté)
+       Jedna karta pro tři konce: zrušená platba, zamítnutá platba
+       a vypršelá nabídka. Mění se ikona, nadpis, text a tlačítka —
+       samostatné obrazovky by se lišily jen větou. -->
+  <div id="payResult" hidden>
+    <div class="decline-done state-card" id="payCard">
+      <div class="state-head">
+        <svg class="state-icon" id="stateIcon" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+          <use href="#i-state-info"/>
+        </svg>
+        <strong id="stateHeadline">Platba se nepodařila</strong>
+      </div>
+      <span class="state-text" id="stateText">Vaše původní objednávka je zaplacená a v pořádku. Nepodařilo se zaplatit jen věci navíc.</span>
+      <div class="state-actions">
+        <button class="cta state-primary" id="statePrimary" type="button">Zkusit znovu</button>
+        <button class="decline-btn state-secondary" id="stateSecondary" type="button">Nechci</button>
       </div>
     </div>
   </div>
@@ -216,6 +245,17 @@
     <button class="brana-plocha" id="qrPay" type="button" aria-label="Zaplatit v platební bráně">
       <img src="assets/platebni-brana.png" alt="Platební brána">
     </button>
+
+    <!-- Ovládání prototypu. Na ostré stránce nic takového není —
+         tady zastupuje to, jak platba v bráně dopadne. -->
+    <div class="proto-controls">
+      <span class="proto-label">Prototyp — jak platba dopadne:</span>
+      <div class="proto-buttons">
+        <button type="button" data-vysledek="zaplaceno">Zaplaceno</button>
+        <button type="button" data-vysledek="zruseno">Zrušeno</button>
+        <button type="button" data-vysledek="zamitnuto">Zamítnuto</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -716,6 +756,9 @@ const backdrop   = document.getElementById('backdrop');
 function openQR(){
   /* Prázdný košík — není co doplácet, takže rovnou děkovací karta. */
   if (!count){ showThanks('Díky! Balíme 🐾'); return; }
+  /* Odpočet je lhůta na zahájení platby. Po vypršení už nový pokus
+     nezačíná, rozdělaný se ale dokončit smí. */
+  if (!nabidkaBezi()){ ukazStav('vyprselo'); return; }
   backdrop.hidden = false;
   document.body.style.overflow = 'hidden';
   document.getElementById('qrPay').focus();
@@ -727,10 +770,8 @@ function closeQR(){
 
 document.getElementById('cta').addEventListener('click', openQR);
 document.getElementById('qrPay').addEventListener('click', () => {
-  /* Zastupuje zaplacení v bráně. Na Shoptetu se sem zákazník vrátí
-     až po skutečné platbě, návratovou URL musí mířit sem. */
-  closeQR();
-  showThanks('Díky! Balíme 🐾');
+  /* Klepnutí na snímek brány zastupuje úspěšnou platbu. */
+  vysledekPlatby('zaplaceno');
 });
 document.getElementById('qrX').addEventListener('click', closeQR);
 backdrop.addEventListener('click', e => { if (e.target === backdrop) closeQR(); });
@@ -864,14 +905,19 @@ addEventListener('keydown', e => {
 <script>
 /* Finální obrazovka — děkovací karta místo nabídky. Používá ji
    jak "Nechci", tak "Uzavřít objednávku". */
-function showThanks(headline){
+/* Nabídka, pruh "Mňau tip" i spodní lišta zmizí. Používají to všechny
+   konce — odmítnutí, zaplacení i stavy po návratu z brány. */
+function skryjNabidku(){
   document.getElementById('declineOfferWrap').hidden = true;
-  /* Pruh "Mňau tip" i nabídka po rozhodnutí mizí natrvalo —
-     zpátky k nabídce se zákazník už nedostane. */
   document.querySelector('.tip').hidden = true;
   document.getElementById('offerSection').hidden = true;
   document.getElementById('storySection').hidden = true;
   document.getElementById('summary').hidden = true;
+}
+
+function showThanks(headline){
+  skryjNabidku();
+  document.getElementById('payResult').hidden = true;
   document.getElementById('declineResult').hidden = false;
   if (headline) document.getElementById('declineHeadline').textContent = headline;
   window.scrollTo({top:0, behavior:'smooth'});
@@ -888,6 +934,102 @@ document.getElementById('declineBtn').addEventListener('click', () => {
 document.getElementById('hideOfferBtn').addEventListener('click', () => {
   document.getElementById('declineBtn').click();
 });
+
+
+/* ---------- stavy po návratu z platební brány ---------- */
+/* Doplatek je samostatná platba. Když neprojde, původní objednávka se
+   ničeho nedotkne — proto všechny tři texty začínají ujištěním, že je
+   zaplacená. Košík se schválně nevysype: nepovedený pokus není
+   rozhodnutí a nutit člověka vybírat všechno znovu nedává smysl. */
+const STAVY = {
+  zruseno: {
+    ikona: '#i-state-info',
+    nadpis: 'Platbu jste zrušili',
+    text: 'Nic se neděje. Vaše původní objednávka je zaplacená a v pořádku. Neproběhla jen platba za věci navíc.',
+    hlavni: 'Zkusit znovu',
+    vedlejsi: 'Nechci'
+  },
+  zamitnuto: {
+    ikona: '#i-state-info',
+    nadpis: 'Platba se nepodařila',
+    text: 'Vaše původní objednávka je zaplacená a v pořádku. Nepodařilo se zaplatit jen věci navíc.',
+    hlavni: 'Zkusit znovu',
+    vedlejsi: 'Nechci'
+  },
+  vyprselo: {
+    ikona: '#i-state-clock',
+    nadpis: 'Nabídka už skončila',
+    text: 'Vaše původní objednávka je zaplacená a v pořádku. Věci navíc jsme do objednávky nepřidali.',
+    hlavni: 'Pokračovat',
+    vedlejsi: null
+  }
+};
+
+/* Odpočet je lhůta na ZAHÁJENÍ platby. Kdo klikl včas, může platbu
+   dokončit i po vypršení — nový pokus už ale nezačne. */
+function nabidkaBezi(){ return left > 0; }
+
+function ukazStav(klic){
+  const stav = STAVY[klic];
+  if (!stav) return;
+  skryjNabidku();
+  document.getElementById('declineResult').hidden = true;
+
+  document.querySelector('#stateIcon use').setAttribute('href', stav.ikona);
+  document.getElementById('stateHeadline').textContent = stav.nadpis;
+  document.getElementById('stateText').textContent = stav.text;
+
+  const hlavni = document.getElementById('statePrimary');
+  const vedlejsi = document.getElementById('stateSecondary');
+  hlavni.textContent = stav.hlavni;
+  hlavni.dataset.akce = klic === 'vyprselo' ? 'konec' : 'znovu';
+  vedlejsi.hidden = !stav.vedlejsi;
+  if (stav.vedlejsi) vedlejsi.textContent = stav.vedlejsi;
+
+  document.getElementById('payResult').hidden = false;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+/* Jak platba dopadla. Na ostré stránce sem místo toho přijde návrat
+   z brány — a o skutečném výsledku rozhoduje serverový callback,
+   ne to, že se zákazník vrátil na stránku. */
+function vysledekPlatby(vysledek){
+  closeQR();
+  if (vysledek === 'zaplaceno'){ showThanks('Díky! Balíme 🐾'); return; }
+  ukazStav(nabidkaBezi() ? vysledek : 'vyprselo');
+}
+
+document.getElementById('statePrimary').addEventListener('click', e => {
+  if (e.currentTarget.dataset.akce === 'konec'){ showThanks('Díky! Balíme 🐾'); return; }
+  /* Nový pokus jde zahájit, jen dokud nabídka běží. */
+  if (!nabidkaBezi()){ ukazStav('vyprselo'); return; }
+  document.getElementById('payResult').hidden = true;
+  openQR();
+});
+
+document.getElementById('stateSecondary').addEventListener('click', () => {
+  vysypKosik();
+  showThanks('Díky! Balíme 🐾');
+});
+
+/* Ovládání prototypu uvnitř brány. */
+document.querySelectorAll('.proto-buttons button').forEach(b => {
+  b.addEventListener('click', () => vysledekPlatby(b.dataset.vysledek));
+});
+
+/* Rovnou do stavu odkazem: ?stav=zruseno | zamitnuto | vyprselo.
+   Kvůli ukázce se přidá jeden produkt, ať má "Zkusit znovu" co platit. */
+(function(){
+  const stav = new URLSearchParams(location.search).get('stav');
+  if (!STAVY[stav]) return;
+  if (!count){
+    cart.set(0, 1);
+    updateCard(0);
+    refresh();
+  }
+  if (stav === 'vyprselo') left = 0;
+  ukazStav(stav);
+})();
 
 </script>
 </body>

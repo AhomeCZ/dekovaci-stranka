@@ -120,6 +120,60 @@ stránku po objednávce. A pravdu o platbě zná jen serverový callback z brán
 ne návratová URL — pokud zákazník zavře okno, stránka se nikdy nedozví, jak
 to dopadlo.
 
+### Když se doplatek nepodaří zaplatit
+
+Po návratu z brány se místo nabídky ukáže jedna karta. Liší se jen ikonou,
+nadpisem, textem a tlačítky — samostatné obrazovky by se lišily jednou větou.
+
+| Situace | Nadpis | Hlavní tlačítko | Vedlejší |
+|---|---|---|---|
+| Zákazník platbu zrušil | Platbu jste zrušili | Zkusit znovu → brána | Nechci → konec |
+| Banku platbu zamítla | Platba se nepodařila | Zkusit znovu → brána | Nechci → konec |
+| Nabídka mezitím vypršela | Nabídka už skončila | Pokračovat → konec | — |
+
+Všechny tři texty začínají ujištěním, že **původní objednávka je zaplacená
+a v pořádku**. Stránka nahoře hlásí „Objednávka je zaplacená" — když pak
+selže platba, zákazník si snadno domyslí, že se rozbila celá objednávka.
+To je nejdražší nedorozumění, jaké tu může vzniknout, proto je ta věta první.
+
+**Košík se po neúspěchu nevysype.** Nepovedený pokus není rozhodnutí, takže
+přibalené věci i jejich počty zůstanou a „Zkusit znovu" platí přesně to, co
+je v košíku. Vysype se až po „Nechci", které nabídku zavře natrvalo.
+
+**Odpočet 15 minut je lhůta na zahájení platby.** Kdo klikl včas, může platbu
+dokončit i po vypršení. Nový pokus už ale nezačne — po návratu z neúspěšné
+platby se místo „Zkusit znovu" ukáže „Nabídka už skončila". Odpočet se
+nikde nepauzuje.
+
+### Pravidla pro vývoj
+
+1. Doplatek je **vždy samostatná platba**. Původní zaplacená objednávka se
+   nikdy neruší, nemění, nevrací ani nestrhává znovu jako jedna částka.
+2. Přibalené věci se k objednávce přidají **až po potvrzení platby
+   serverovým callbackem**.
+3. Dokud callback nedorazí, platí pro sklad: **doplňky nejsou zaplacené
+   a nebalí se**.
+4. Existuje **okamžik uzamčení objednávky k expedici**:
+   - callback dorazí před ním → přibalené věci jdou do zásilky,
+   - callback dorazí po něm → doplatek se vrátí a samostatný balík se neposílá.
+5. **Počet pokusů o zaplacení na naší straně neomezujeme**, dokud nabídka
+   běží. Limity platební brány platí dál.
+6. **Doplacení odkazem v e-mailu se v této fázi nedělá.**
+
+### Jak si stavy vyzkoušet
+
+Odkazem — hodí se na sdílení a screenshoty:
+
+```
+dekovacka_obj_kartou.html?stav=zruseno
+dekovacka_obj_kartou.html?stav=zamitnuto
+dekovacka_obj_kartou.html?stav=vyprselo
+```
+
+Nebo proklikáním: přidej produkt, dej **Přibalit a zaplatit** a ve snímku
+brány jsou dole tlačítka **Zaplaceno / Zrušeno / Zamítnuto**. Ta jsou jen
+v prototypu, na ostré stránce nic takového není.
+
 ---
 
 ## Zelená varianta (A/B test)
