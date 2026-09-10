@@ -4133,3 +4133,33 @@ a,button{
 .summary-note.is-open{grid-template-rows:1fr;opacity:1;}
 .summary-note[hidden]{display:none !important;}
 .summary-note-inner{overflow:hidden;min-height:0;}
+
+/* ============================================================
+   Tužka u potvrzení — popisek „Upravit" zůstává až do 330 px
+   ------------------------------------------------------------
+   Samotná ikona neřekla, co vlastně upravuje: e-mail, nebo celou
+   objednávku. Popisek proto zůstává i na mobilu a ikona se kvůli
+   místu zmenšila — hlavní váhu nese slovo, ne obrázek.
+   Pod 330 px zbude jen tužka, jinak by se pruh zalomil.
+   ============================================================ */
+@media (max-width:400px){
+  .edit-label{display:inline;}
+  .edit-btn{
+    width:auto;min-width:0;
+    height:40px;
+    padding:0 13px;
+    gap:6px;
+    border-radius:999px;
+    font-size:.84rem;
+  }
+  .edit-btn svg{width:16px;height:16px;}
+}
+@media (max-width:359px){
+  .edit-btn{height:38px;padding:0 11px;font-size:.8rem;}
+  .edit-btn svg{width:15px;height:15px;}
+}
+@media (max-width:330px){
+  .edit-label{display:none;}
+  .edit-btn{width:38px;min-width:38px;height:38px;padding:0;gap:0;}
+  .edit-btn svg{width:17px;height:17px;}
+}
