@@ -115,8 +115,7 @@
     <svg class="tip-watermark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#i-paw"/></svg>
     <span class="tip-copy">
       <strong><i><b>MňauTip</b><strong style="background-color: rgb(248, 240, 254); color: rgb(42, 34, 51); display: inline !important;">: Přibalit?</strong></i><svg class="heading-paw" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#i-paw"></use></svg></strong>
-      <span>Vejde se toho víc,
-pojede to spolu.</span>
+      <span>Vejde se tam ještě něco!</span>
     </span>
     <button class="decline-btn tip-hide decline-2r" id="hideOfferBtn" type="button">Dokončit
 bez nabídky</button>
@@ -131,8 +130,8 @@ bez nabídky</button>
 
       <img class="mascot mascot--tip" src="assets/krabicka.png" alt="">
       <div class="decline-done-copy">
-        <strong id="declineHeadline">Díky! Už balíme <svg class="dik-paw" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#i-paw"/></svg></strong>
-        <b class="decline-lead">Objednávka už je v dobrých tlapkách</b>
+        <strong id="declineHeadline">Děkujeme!<svg class="dik-paw" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#i-paw"></use></svg></strong>
+        <b class="decline-lead">Vaše objednávka už je v dobrých tlapkách</b>
         <span>Vaši objednávku máme v pořádku a už se o ni staráme.</span>
         <span>Pečlivě ji zabalíme a jakmile vyrazí na cestu, dáme vám vědět e-mailem.</span>
       </div>
@@ -844,7 +843,7 @@ function openQR(){
      Nabídku neukončuje, od toho je "Nechci". */
   /* Po vypršení je košík prázdný a lišta to má napsané — tlačítko už
      jen dovede na závěrečné poděkování. */
-  if (vyprselo){ showThanks('Díky! Už balíme'); return; }
+  if (vyprselo){ showThanks('Děkujeme!'); return; }
   if (!count){ ukazPoznamku(); return; }
   /* Odpočet je lhůta na zahájení platby. Po vypršení už nový pokus
      nezačíná, rozdělaný se ale dokončit smí. */
@@ -1026,7 +1025,7 @@ function showThanks(headline){
 
 document.getElementById('declineBtn').addEventListener('click', () => {
   vysypKosik();
-  showThanks('Díky! Už balíme');
+  showThanks('Děkujeme!');
 });
 
 /* "Skrýt nabídku" nahoře dělá totéž co "Nechci" dole — posílá se
@@ -1098,12 +1097,12 @@ function ukazStav(klic){
    ne to, že se zákazník vrátil na stránku. */
 function vysledekPlatby(vysledek){
   closeQR();
-  if (vysledek === 'zaplaceno'){ showThanks('Díky! Už balíme'); return; }
+  if (vysledek === 'zaplaceno'){ showThanks('Děkujeme!'); return; }
   ukazStav(nabidkaBezi() ? vysledek : 'vyprselo');
 }
 
 document.getElementById('statePrimary').addEventListener('click', e => {
-  if (e.currentTarget.dataset.akce === 'konec'){ showThanks('Díky! Už balíme'); return; }
+  if (e.currentTarget.dataset.akce === 'konec'){ showThanks('Děkujeme!'); return; }
   /* Nový pokus jde zahájit, jen dokud nabídka běží. */
   if (!nabidkaBezi()){ ukazStav('vyprselo'); return; }
   document.getElementById('payResult').hidden = true;
@@ -1112,7 +1111,7 @@ document.getElementById('statePrimary').addEventListener('click', e => {
 
 document.getElementById('stateSecondary').addEventListener('click', () => {
   vysypKosik();
-  showThanks('Díky! Už balíme');
+  showThanks('Děkujeme!');
 });
 
 /* Ovládání prototypu uvnitř brány. */

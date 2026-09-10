@@ -166,11 +166,11 @@ html.z-theme-ready[data-mascot="super"] .tip .mascot--tip{animation-duration:1.6
 
 /* Nadpis a text pod sebou, zarovnané doleva. */
 .tip-copy{
-  display:flex!important;
+  /* display:flex!important; */
   flex-direction:column!important;
-  align-items:flex-start!important;
-  row-gap:2px;
-  text-align:left!important;
+  align-items: center !important;
+  /* row-gap:2px; */
+  /* text-align: center; */
   color:var(--z-tip-ink)!important;
 }
 .tip-copy strong{
@@ -344,6 +344,7 @@ html .cta:focus-visible{
 }
 html .item .add{
   box-shadow:0 3px 10px rgba(var(--z-shadow),.30) !important;
+  background: linear-gradient(100deg,#B27EDB 0%,#C454B9 50%,#EE729D 100%);
 }
 html .item .add:hover{
   box-shadow:0 5px 14px rgba(var(--z-shadow),.32) !important;
@@ -356,6 +357,7 @@ html .btn-solid,
 html .modal-close,
 html .product-detail-copy .modal-close{
   text-shadow:none !important;
+  background: linear-gradient(100deg,#B27EDB 0%,#C454B9 50%,#EE729D 100%);
 }
 
 /* -------------------------------------------------------------
