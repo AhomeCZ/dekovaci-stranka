@@ -176,6 +176,13 @@ bez nabídky</button>
         <!-- Popisek k odpočtu. Samotné číslo neřeklo, co vyprší.
              Když se vyroluje hláška, popisek jí místo uvolní. -->
         <span class="timer-note" id="timerNote">Ještě můžete něco přihodit</span>
+        <!-- Hláška se vyroluje po klepnutí na hlavní tlačítko s prázdným
+             košíkem. Napevno tu nevisí, aby lištu nezvyšovala. -->
+        <div class="summary-note" id="summaryNote" hidden>
+          <div class="summary-note-inner">
+            <span>Ještě můžete něco přihodit.</span>
+          </div>
+        </div>
         <div class="total">
           <span>K doplacení:</span>
           <strong id="total">0 Kč</strong>
@@ -196,7 +203,8 @@ bez nabídky</button>
 bez nabídky</button>
         </p>
         <button class="cta" id="cta" type="button">
-          <span id="ctaText">Uzavřít objednávku</span>
+          <span id="ctaText">Přidejte něco
+pro radost</span>
           <svg aria-hidden="true"><use href="#i-chev"/></svg>
         </button>
       </div>
@@ -406,6 +414,17 @@ addEventListener('scroll', updateBar, {passive:true});
 /* Konec odpočtu. Nabídka skončila, takže se košík vysype a zákazník
    jde rovnou na závěrečnou děkovací kartu — nemá smysl ho nechat
    stát nad nabídkou, ze které si už nic vybrat nemůže. */
+/* Hláška v liště — vyroluje se klepnutím na hlavní tlačítko
+   s prázdným košíkem. Grid 0fr -> 1fr, stejně jako u košíku. */
+function ukazPoznamku(){
+  const note = document.getElementById('summaryNote');
+  if (!note.hidden) return;
+  note.hidden = false;
+  const lab = document.getElementById('timerNote');
+  if (lab) lab.hidden = true;
+  requestAnimationFrame(() => note.classList.add('is-open'));
+}
+
 function nabidkaVyprsela(){
   if (vyprselo) return;
   /* Když je zákazník už na závěrečné kartě nebo ve stavu po platbě,
@@ -429,7 +448,7 @@ function refresh(){
   count = [...cart.values()].reduce((sum, qty) => sum + qty, 0);
   total = [...cart.entries()].reduce((sum, [index, qty]) => sum + products[index].p * qty, 0);
   totalEl.textContent = total + ' Kč';
-  ctaText.textContent = 'Uzavřít objednávku';
+  ctaText.textContent = count ? 'Přibalit do objednávky' : 'Přidejte něco\npro radost';
   summary.dataset.state = count ? 'filled' : 'empty';
   summaryToggle.hidden = !count;
   summaryToggle.setAttribute('aria-expanded', String(expanded && !!count));
@@ -747,6 +766,9 @@ setInterval(() => {
    jako po "Nechci"), jen s nadpisem podle toho, jestli se něco
    přibalilo. */
 document.getElementById('cta').addEventListener('click', () => {
+  /* Prázdný košík — tlačítko zve k výběru, tak nabídku nezavírá.
+     Od toho je "Dokončit bez nabídky". */
+  if (!count){ ukazPoznamku(); return; }
   showThanks('Děkujeme!');
 });
 
