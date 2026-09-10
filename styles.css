@@ -4091,3 +4091,27 @@ a,button{
   cursor:pointer;
 }
 .proto-buttons button:hover{border-color:var(--violet);color:var(--violet);}
+
+/* ---- Odpočet stejně velký v obou stavech -------------------------
+   Při plném košíku se hodiny zmenšovaly, aby se do řádku vešla
+   částka. Ta má dnes vlastní řádek "K doplacení", takže není proč —
+   a odpočet je to hlavní, co má lišta sdělit. Hodnoty jsou opsané
+   z pravidel pro prázdný stav o kus výš, jen se pouštějí na oba. */
+@media (max-width:639px){
+  .summary[data-state="filled"] .timer-face .clock{font-size:1.5rem !important;}
+  .summary[data-state="filled"] .timer-face .paw{
+    display:block !important;
+    width:21px !important;height:21px !important;
+  }
+  .summary[data-state="filled"] .timer::after{height:4px;}
+}
+@media (max-width:379px){
+  .summary[data-state="filled"] .timer-face .clock{font-size:1.34rem !important;}
+}
+@media (max-width:345px){
+  .summary[data-state="filled"] .timer-face .clock{font-size:1.18rem !important;}
+}
+
+/* Pruh s potvrzením má display:flex, a ten přebije [hidden] z prohlížeče —
+   stejná past jako u pruhu "Mňau tip". Na koncové obrazovce musí zmizet. */
+.confirm[hidden]{display:none !important;}
