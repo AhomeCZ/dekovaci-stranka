@@ -357,3 +357,15 @@ html .product-detail-copy .modal-close{
 html .state-icon{
   color:var(--z-accent)!important;
 }
+
+/* -------------------------------------------------------------
+   12) Ikona u nepovedené platby není zelená
+   Zelená na celé stránce znamená „zaplaceno, v pořádku, hotovo".
+   U zrušené a zamítnuté platby proto jantarová — upozorňuje,
+   ale neděsí. Původní objednávka je pořád zaplacená, takže
+   červená by byla přehnaná.
+   ------------------------------------------------------------- */
+html [data-stav="zruseno"] .state-icon,
+html [data-stav="zamitnuto"] .state-icon{
+  color:#B45309!important;
+}

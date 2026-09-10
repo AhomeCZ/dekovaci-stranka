@@ -366,6 +366,8 @@ const cart = new Map();
 let expanded = false;
 let visible = 0;
 let loading = false;
+/* Odpočet doběhl — nabídka je zavřená a už se s ní nedá hýbat. */
+let vyprselo = false;
 
 /* Superman zůstává uvnitř sticky souhrnu, aby nezakrýval produkty. */
 (function(){
@@ -460,7 +462,7 @@ function refresh(){
   count = [...cart.values()].reduce((sum, qty) => sum + qty, 0);
   total = [...cart.entries()].reduce((sum, [index, qty]) => sum + products[index].p * qty, 0);
   totalEl.textContent = total + ' Kč';
-  ctaText.textContent = count ? 'Přibalit a zaplatit' : 'Vyberte něco navíc';
+  ctaText.textContent = vyprselo ? 'Pokračovat' : (count ? 'Přibalit a zaplatit' : 'Vyberte něco navíc');
   /* S plným košíkem lišta potřebuje místo na cenu, hláška jde pryč. */
   if (count) schovejPoznamku();
   summary.dataset.state = count ? 'filled' : 'empty';
@@ -589,6 +591,8 @@ products.forEach((item, i) => {
   li.querySelector('.thumb').addEventListener('click', () => openProduct(i));
 
   li.querySelector('.add').addEventListener('click', e => {
+    /* Po vypršení nabídka neplatí, přidat už nejde. */
+    if (vyprselo) return;
     const img = li.querySelector('.thumb img');
 
     /* Každé kliknutí přidá další kus stejného produktu. Odebrání je v souhrnu. */
@@ -618,6 +622,8 @@ products.forEach((item, i) => {
 cartItems.addEventListener('click', e => {
   const button = e.target.closest('button[data-cart-action]');
   if (!button) return;
+  /* Po vypršení se s košíkem už nehýbe. */
+  if (vyprselo) return;
   const index = Number(button.dataset.index);
   const qty = cart.get(index) || 0;
   if (button.dataset.cartAction === 'plus') cart.set(index, qty + 1);
@@ -751,6 +757,7 @@ setInterval(() => {
   if (left === 0){
     timer.classList.add('is-done');
     timer.classList.remove('is-urgent','is-critical');
+    nabidkaVyprsela();
   }
 }, 1000);
 
@@ -765,6 +772,26 @@ function ukazPoznamku(){
   note.hidden = false;
   requestAnimationFrame(() => note.classList.add('is-open'));
 }
+/* Konec odpočtu. Košík se vysype — nabídka skončila a ležely by v něm
+   věci, které si zákazník už koupit nemůže. Lišta to rovnou napíše,
+   ať se to nedozví až u placení. */
+function nabidkaVyprsela(){
+  if (vyprselo) return;
+  vyprselo = true;
+  vysypKosik();
+  const note = document.getElementById('summaryNote');
+  note.querySelector('strong').textContent = 'Krabička je zavřená';
+  note.querySelector('span').textContent = 'Věci navíc jsme vyndali, objednávku už balíme.';
+  ukazPoznamku();
+  /* Mňau tip zve k přibalení a dole zrovna stojí, že krabička je
+     zavřená. Dvě protichůdné věty vedle sebe, tak proužek zmizí. */
+  document.querySelector('.tip').hidden = true;
+  /* Košíky na dlaždicích už nic neudělají, ať to na nich je vidět. */
+  document.querySelectorAll('#grid .add').forEach(b => { b.disabled = true; });
+  /* Odmítat už není co. */
+  document.getElementById('declineOfferWrap').hidden = true;
+}
+
 function schovejPoznamku(){
   const note = document.getElementById('summaryNote');
   note.classList.remove('is-open');
@@ -775,6 +802,9 @@ function openQR(){
 
   /* Prázdný košík — tlačítko vyzývá k výběru, tak hláškou připomene, že jde ještě přihodit.
      Nabídku neukončuje, od toho je "Nechci". */
+  /* Po vypršení je košík prázdný a lišta to má napsané — tlačítko už
+     jen dovede na závěrečné poděkování. */
+  if (vyprselo){ showThanks('Díky! Už balíme'); return; }
   if (!count){ ukazPoznamku(); return; }
   /* Odpočet je lhůta na zahájení platby. Po vypršení už nový pokus
      nezačíná, rozdělaný se ale dokončit smí. */
@@ -1016,6 +1046,9 @@ function ukazStav(klic){
   vedlejsi.hidden = !stav.vedlejsi;
   if (stav.vedlejsi) vedlejsi.textContent = stav.vedlejsi;
 
+  /* Barva ikony se řídí stavem — zelená na téhle stránce znamená
+     "zaplaceno, v pořádku" a u nepovedené platby by lhala. */
+  document.getElementById('payResult').dataset.stav = klic;
   document.getElementById('payResult').hidden = false;
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
