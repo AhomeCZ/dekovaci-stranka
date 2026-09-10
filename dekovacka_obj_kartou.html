@@ -362,7 +362,9 @@ const products = [
   {n:'Keramický svícen',             p:69,  o:139, d:'Minimalistický keramický svícen, který krásně doplní každou svíčku.'},
   {n:'Dárková stuha',                p:12,  o:29,  d:'Jemná stuha pro poslední detail, který dárkové balení hezky spojí.'},
   {n:'Mini mýdlo s levandulí',       p:25,  o:59,  d:'Malé ručně vyráběné mýdlo s levandulovou vůní pro příjemný každodenní rituál.'},
-  {n:'Přírodní zápalky v tubusu',    p:35,  o:79,  d:'Stylový tubus s dlouhými zápalkami, který se hodí ke svíčkám i do dárkového balíčku.'}
+  {n:'Přírodní zápalky v tubusu',    p:35,  o:79,  d:'Stylový tubus s dlouhými zápalkami, který se hodí ke svíčkám i do dárkového balíčku.'},
+  {n:'Bavlněný provázek na dárky',   p:19,  o:49,  d:'Přírodní provázek, kterým se dárek uváže na poslední chvíli a hned vypadá líp.'},
+  {n:'Vonný sáček do skříně',        p:32,  o:85,  d:'Levandulový sáček, který provoní prádlo i celou skříň a vydrží dlouhé měsíce.'}
 ];
 
 const grid     = document.getElementById('grid');
@@ -390,6 +392,10 @@ let loading = false;
 let otevrenyProdukt = null;
 /* Odpočet doběhl — nabídka je zavřená a už se s ní nedá hýbat. */
 let vyprselo = false;
+/* Odpočet stojí, dokud je zákazník v platební bráně. Jinak by mu
+   mohl vypršet uprostřed placení a my bychom mu vysypali košík
+   za peníze, které zrovna odcházejí. */
+let odpocetStoji = false;
 
 /* Superman zůstává uvnitř sticky souhrnu, aby nezakrýval produkty. */
 (function(){
@@ -787,6 +793,7 @@ updateBar();
 
 setInterval(() => {
   if (left <= 0) return;
+  if (odpocetStoji) return;
   left--;
   const m = String(Math.floor(left / 60)).padStart(2, '0');
   const s = String(left % 60).padStart(2, '0');
@@ -817,29 +824,19 @@ function ukazPoznamku(){
   requestAnimationFrame(() => note.classList.add('is-open'));
 }
 
-/* Konec odpočtu. Košík se vysype — nabídka skončila a ležely by v něm
-   věci, které si zákazník už koupit nemůže. Lišta to rovnou napíše,
-   ať se to nedozví až u placení. */
+/* Konec odpočtu. Nabídka skončila, takže se košík vysype a zákazník
+   jde rovnou na závěrečnou děkovací kartu — nemá smysl ho nechat
+   stát nad nabídkou, ze které si už nic vybrat nemůže. */
 function nabidkaVyprsela(){
   if (vyprselo) return;
+  /* Když je zákazník už na závěrečné kartě nebo ve stavu po platbě,
+     není co zavírat. */
+  if (!document.getElementById('declineResult').hidden) return;
+  const stav = document.getElementById('payResult');
+  if (stav && !stav.hidden) return;
   vyprselo = true;
   vysypKosik();
-  const note = document.getElementById('summaryNote');
-  /* Nadpis v hlášce nemusí existovat — když v ní zbyde jen jeden
-     řádek, sáhnutí na querySelector by vrátilo null a shodilo
-     všechno pod sebou (Mňau tip, dlaždice, přepnutí stavu). */
-  const nadpis = note.querySelector('strong');
-  if (nadpis) nadpis.textContent = 'Čas vypršel';
-  note.querySelector('span').textContent = 'Věci navíc jsme vyndali.';
-  ukazPoznamku();
-  /* Mňau tip zve k přibalení a dole zrovna stojí, že je konec —
-     dvě protichůdné věty vedle sebe, tak proužek zmizí. */
-  document.querySelector('.tip').hidden = true;
-  /* Košíky na dlaždicích už nic neudělají, ať to na nich je vidět. */
-  document.querySelectorAll('#grid .add').forEach(b => { b.disabled = true; });
-  /* Odmítat už není co. */
-  document.getElementById('declineOfferWrap').hidden = true;
-  summary.dataset.state = 'konec';
+  showThanks('Děkujeme!');
 }
 
 function schovejPoznamku(){
@@ -860,11 +857,13 @@ function openQR(){
      nezačíná, rozdělaný se ale dokončit smí. */
   if (!nabidkaBezi()){ ukazStav('vyprselo'); return; }
   backdrop.hidden = false;
+  odpocetStoji = true;
   document.body.style.overflow = 'hidden';
   document.getElementById('qrPay').focus();
 }
 function closeQR(){
   backdrop.hidden = true;
+  odpocetStoji = false;
   document.body.style.overflow = '';
 }
 

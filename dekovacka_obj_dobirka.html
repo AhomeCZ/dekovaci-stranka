@@ -290,7 +290,9 @@ const products = [
   {n:'Keramický svícen',             p:69,  o:139, d:'Minimalistický keramický svícen, který krásně doplní každou svíčku.'},
   {n:'Dárková stuha',                p:12,  o:29,  d:'Jemná stuha pro poslední detail, který dárkové balení hezky spojí.'},
   {n:'Mini mýdlo s levandulí',       p:25,  o:59,  d:'Malé ručně vyráběné mýdlo s levandulovou vůní pro příjemný každodenní rituál.'},
-  {n:'Přírodní zápalky v tubusu',    p:35,  o:79,  d:'Stylový tubus s dlouhými zápalkami, který se hodí ke svíčkám i do dárkového balíčku.'}
+  {n:'Přírodní zápalky v tubusu',    p:35,  o:79,  d:'Stylový tubus s dlouhými zápalkami, který se hodí ke svíčkám i do dárkového balíčku.'},
+  {n:'Bavlněný provázek na dárky',   p:19,  o:49,  d:'Přírodní provázek, kterým se dárek uváže na poslední chvíli a hned vypadá líp.'},
+  {n:'Vonný sáček do skříně',        p:32,  o:85,  d:'Levandulový sáček, který provoní prádlo i celou skříň a vydrží dlouhé měsíce.'}
 ];
 
 const grid     = document.getElementById('grid');
@@ -313,6 +315,8 @@ const cart = new Map();
 let expanded = false;
 let visible = 0;
 let loading = false;
+/* Odpočet doběhl — nabídka skončila. */
+let vyprselo = false;
 /* Který produkt je zrovna otevřený v detailu — tlačítko "Přidat"
    v okně musí vědět, co přidává. */
 let otevrenyProdukt = null;
@@ -399,6 +403,21 @@ addEventListener('scroll', updateBar, {passive:true});
 /* Vysype košík a srovná karty produktů i lištu. Používá to
    "Nechci" (nechci nic přibalit) i "Odebrat vše" v košíku —
    po obou musí být stav vidět, ne jen spočítaný jinak. */
+/* Konec odpočtu. Nabídka skončila, takže se košík vysype a zákazník
+   jde rovnou na závěrečnou děkovací kartu — nemá smysl ho nechat
+   stát nad nabídkou, ze které si už nic vybrat nemůže. */
+function nabidkaVyprsela(){
+  if (vyprselo) return;
+  /* Když je zákazník už na závěrečné kartě nebo ve stavu po platbě,
+     není co zavírat. */
+  if (!document.getElementById('declineResult').hidden) return;
+  const stav = document.getElementById('payResult');
+  if (stav && !stav.hidden) return;
+  vyprselo = true;
+  vysypKosik();
+  showThanks('Děkujeme!');
+}
+
 function vysypKosik(){
   const bylo = [...cart.keys()];
   cart.clear();
@@ -718,6 +737,7 @@ setInterval(() => {
   timer.classList.toggle("is-critical", left <= 60 && left > 0);
   if (left === 0){
     timer.classList.add('is-done');
+    nabidkaVyprsela();
     timer.classList.remove('is-urgent','is-critical');
   }
 }, 1000);
