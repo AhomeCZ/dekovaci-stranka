@@ -377,3 +377,14 @@ html [data-stav="zruseno"] .state-icon,
 html [data-stav="zamitnuto"] .state-icon{
   color:#B45309!important;
 }
+
+/* -------------------------------------------------------------
+   13) Řádek pod nadpisem v Mňau tipu se láme tam, kde chceme
+   Výš v tomhle souboru je na .tip-lead white-space:normal
+   s !important, takže zalomení z hlavních stylů neprošlo.
+   Text plní JS přes textContent, proto pre-line a ne <br>.
+   ------------------------------------------------------------- */
+.tip-copy .tip-lead,
+.tip-copy .tip-sub{
+  white-space:pre-line!important;
+}

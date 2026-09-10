@@ -6,10 +6,11 @@
   text-align:center;
 }
 
-/* Tlačítko "Nechci" je součástí karty "Mňau tip" — sedí vpravo
-   nahoře vedle textu, ne jako vlastní karta ani na novém řádku. */
+/* Tlačítko je součástí karty "Mňau tip" — sedí vpravo vedle textu,
+   ne jako vlastní karta ani na novém řádku. Svisle na střed: u textu
+   na dvou řádcích se jinak vytáhne nahoru a visí. */
 .tip{
-  align-items:flex-start;
+  align-items:center;
 }
 .tip .decline-offer{
   flex:0 0 auto;

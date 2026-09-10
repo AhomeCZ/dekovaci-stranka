@@ -4185,3 +4185,11 @@ a,button{
   line-height:1.15;
   text-align:center;
 }
+
+/* Text v Mňau tipu se láme tam, kde chceme, ne kde vyjde šířka.
+   pre-line proto, že v zelené variantě ten řádek plní JS přes
+   textContent a značky by tam neprošly. */
+.tip-copy span,
+.tip-lead{
+  white-space:pre-line;
+}
