@@ -29,17 +29,19 @@ Doplatek se v každém způsobu platby chová jinak, proto tři samostatné soub
 
 | Stránka | Prázdný košík | Něco přidáno |
 |---|---|---|
-| kartou | **Vyberte něco navíc** | **Přibalit a zaplatit** |
-| dobírka | Uzavřít objednávku | Uzavřít objednávku |
-| převodem | Uzavřít objednávku | Uzavřít objednávku |
+| kartou | **Přidejte něco pro radost** | **Přibalit a zaplatit** |
+| dobírka | **Přidejte něco pro radost** | **Přibalit do objednávky** |
+| převodem | **Přidejte něco pro radost** | **Přibalit do objednávky** |
 
 U karty je ve slovech „zaplatit", protože následuje přesměrování do brány.
 
-S prázdným košíkem tlačítko nabídku neukončuje — vyroluje v liště hlášku
-„Ještě nezalepeno / Ještě můžete něco přihodit.", která zmizí,
-jakmile zákazník něco přidá.
-Nabídku odmítá výhradně „Nechci", aby odmítnutí nebylo na hlavním tlačítku.
-U zbylých dvou se online neplatí nic, tak tam nemá co dělat.
+Na všech třech platí: **s prázdným košíkem tlačítko nabídku neukončuje.**
+Vyroluje v liště hlášku a čeká. Jinak by zvalo k výběru a místo toho
+nabídku nenávratně zavřelo. Odmítá výhradně „Dokončit bez nabídky".
+
+Popisky delší než pár slov jsou zalomené na dva řádky přes `\n` v textu
+a `white-space: pre-line` v CSS — texty tlačítek plní JavaScript přes
+`textContent`, takže `<br>` tam neprojde.
 
 ---
 
@@ -47,7 +49,7 @@ U zbylých dvou se online neplatí nic, tak tam nemá co dělat.
 
 ### Rozhodnutí je nevratné
 
-Jakmile zákazník klikne na **Nechci** nebo objednávku uzavře, nabídka
+Jakmile zákazník klikne na **Dokončit bez nabídky** nebo objednávku uzavře, nabídka
 i pruh „Mňau tip" zmizí natrvalo a zpátky se k nim nedostane.
 
 Rozhodnutí, do kterého se dá vracet, není rozhodnutí — vede k přemýšlení
@@ -57,7 +59,7 @@ sumu, která už neplatí.
 
 ### Odmítnout jde na dvou místech
 
-**Nechci** je v pruhu „Mňau tip" nahoře i ve spodní liště. Obě dělají totéž
+**Dokončit bez nabídky** je v pruhu „Mňau tip" nahoře i ve spodní liště. Obě dělají totéž
 a obě **vysypou košík**, aby to, co je vidět na obrazovce, sedělo s částkou
 k zaplacení.
 
@@ -79,7 +81,7 @@ košíku jde jen z dlaždice, ne z detailu.
 
 ### Konec
 
-Karta a dobírka mají **jednu koncovou obrazovku** — „Nechci" i uzavření
+Karta a dobírka mají **jednu koncovou obrazovku** — „Dokončit bez nabídky" i uzavření
 objednávky vedou na tu samou:
 
 > **Děkujeme!** 🐾
@@ -105,7 +107,7 @@ která se pak změní, a platba nebude sedět s objednávkou.
 | Cesta | Částka v QR |
 |---|---|
 | Uzavřít objednávku s přibalenými věcmi | 997 Kč + doplatek = **1 094 Kč** |
-| Nechci | původní **997 Kč** |
+| Dokončit bez nabídky | původní **997 Kč** |
 
 Údaje pod QR (částka, číslo účtu, IBAN, variabilní symbol) mají u sebe ikonu
 kopírování. **IBAN se kopíruje bez mezer**, s mezerami ho formuláře bank
@@ -136,8 +138,8 @@ nadpisem, textem a tlačítky — samostatné obrazovky by se lišily jednou vě
 
 | Situace | Nadpis | Hlavní tlačítko | Vedlejší |
 |---|---|---|---|
-| Zákazník platbu zrušil | Platbu jste zrušili | Zkusit znovu → brána | Nechci → konec |
-| Banku platbu zamítla | Platba se nepodařila | Zkusit znovu → brána | Nechci → konec |
+| Zákazník platbu zrušil | Platbu jste zrušili | Zkusit znovu → brána | Dokončit bez nabídky → konec |
+| Banku platbu zamítla | Platba se nepodařila | Zkusit znovu → brána | Dokončit bez nabídky → konec |
 | Nabídka mezitím vypršela | Nabídka už skončila | Pokračovat → konec | — |
 
 Všechny tři texty začínají ujištěním, že **původní objednávka je zaplacená
@@ -147,12 +149,22 @@ To je nejdražší nedorozumění, jaké tu může vzniknout, proto je ta věta 
 
 **Košík se po neúspěchu nevysype.** Nepovedený pokus není rozhodnutí, takže
 přibalené věci i jejich počty zůstanou a „Zkusit znovu" platí přesně to, co
-je v košíku. Vysype se až po „Nechci", které nabídku zavře natrvalo.
+je v košíku. Vysype se až po „Dokončit bez nabídky", které nabídku zavře natrvalo.
 
-**Odpočet 15 minut je lhůta na zahájení platby.** Kdo klikl včas, může platbu
-dokončit i po vypršení. Nový pokus už ale nezačne — po návratu z neúspěšné
-platby se místo „Zkusit znovu" ukáže „Nabídka už skončila". Odpočet se
-nikde nepauzuje.
+**Odpočet 15 minut je lhůta na zahájení platby.** Kdo klikl včas, může
+platbu dokončit i po vypršení.
+
+**V platební bráně odpočet stojí.** Jinak by mohl vypršet zákazníkovi
+uprostřed placení a my bychom mu vysypali košík za peníze, které zrovna
+odcházejí.
+
+**Když odpočet doběhne**, košík se vysype a zákazník jde rovnou na
+závěrečnou děkovací kartu — každá stránka na svou, u převodu i s QR kódem
+na částku bez věcí navíc. Nedrží se nad nabídkou, ze které si už nic
+vybrat nemůže.
+
+**Posledních 5 minut je zvýrazněných.** Číslice, tlapka i proužek zčervenají
+a odpočet pulzuje; poslední minutu pulzuje dvakrát rychleji.
 
 ### Pravidla pro vývoj
 
@@ -182,6 +194,19 @@ dekovacka_obj_kartou.html?stav=vyprselo
 Nebo proklikáním: přidej produkt, dej **Přibalit a zaplatit** a ve snímku
 brány jsou dole tlačítka **Zaplaceno / Zrušeno / Zamítnuto**. Ta jsou jen
 v prototypu, na ostré stránce nic takového není.
+
+### Detail produktu
+
+Hlavní tlačítko v okně produkt **přidá do košíku** a okno zavře. Zavřít bez
+přidání jde křížkem vpravo nahoře nebo Escapem. Přidání jede přes tlačítko
+na dlaždici, aby se chování ani animace nerozešly se dvěma kopiemi kódu.
+
+### Připravené, ale vypnuté
+
+Ve stavech po nepovedené platbě je v markupu tlačítko **„Zaplatit jinak"**
+s atributem `hidden`. Je tam jen vizuálně, aby bylo vidět, kam ve sloupci
+patří. Při zapínání: odebrat `hidden`, doplnit obsluhu a v `ukazStav()` ho
+schovat pro stav „vyprselo" — po vypršení už není co platit.
 
 ---
 
@@ -227,7 +252,7 @@ variantě B právě jen to CSS a kousek JS navíc.
 | `theme-zelena.css` + `.js` | zelená varianta pro A/B test |
 | `prevodem.css` | platební karta s QR a údaji |
 | `obj-prijata.css` | modré potvrzení u nezaplacené objednávky |
-| `uznic.css` | tlačítka Nechci a děkovací karta |
+| `uznic.css` | tlačítka Dokončit bez nabídky a děkovací karta |
 | `no-badge.css`, `badge-*.css`, `kosik-barva.css` | starší pokusy s pozicí a barvou slevového štítku |
 | `assets/` | fotky produktů, maskoti, snímek platební brány |
 | `scrap/` | dřívější verze stránky, nepoužívá se |

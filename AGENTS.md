@@ -4,7 +4,7 @@ Statické HTML prototypy **děkovací stránky po objednávce** v e-shopu na
 Shoptetu. Slouží k A/B testům a design review — reálná implementace proběhne
 až na Shoptetu. Žádný build, žádné závislosti: otevřeš `.html` a jede to.
 
-Repo: <https://github.com/kikahome/dekovaci-stranka>, větev `main`.
+Repo: <https://github.com/AhomeCZ/dekovaci-stranka>, větev `main`.
 Commit zprávy a komentáře v kódu jsou česky.
 
 ## Tři stavy objednávky
@@ -17,16 +17,25 @@ Podle způsobu platby se liší, co se na stránce ukáže:
 | `dekovacka_obj_kartou.html` | Objednávka zaplacena | **Platba kartou** — už zaplaceno přes platební bránu |
 | `dekovacka_obj_dobirka.html` | Objednávka přijata | **Dobírka** — o platbě se nepíše nic, platí se až na místě |
 
-Ve všech třech je nabídka doplňkových produktů a tlačítka **Nechci / Chci**.
-U karty vede „Doplatit" na QR okno (doplácí se jen přibalené doplňky),
-u převodu a dobírky vede „Uzavřít objednávku" rovnou na děkovací kartu.
+Ve všech třech je nabídka doplňkových produktů. Hlavní tlačítko má dva stavy:
+s prázdným košíkem zve k výběru („Přidejte něco pro radost") a nabídku
+**neukončuje**, s plným košíkem potvrzuje („Přibalit a zaplatit" u karty,
+„Přibalit do objednávky" u zbylých dvou). Odmítá výhradně **„Dokončit bez
+nabídky"** — v pruhu „Mňau tip" nahoře i ve spodní liště.
+
+U karty vede potvrzení na **snímek platební brány**, který zastupuje
+přesměrování; u převodu se objeví QR kód, u dobírky se jde rovnou na
+děkovací kartu. Rozhodnutí je nevratné.
+
+Odpočet 15 minut **stojí, dokud je zákazník v bráně**. Když doběhne,
+košík se vysype a zákazník jde rovnou na děkovací kartu.
 
 Starší varianty (`dekovac*.html`, `kosik-jina-barva.html`) jsou dřívější
 pokusy s pozicí a barvou slevového štítku.
 
 ## Soubory
 
-- **`styles.css`** — všechen layout a komponenty (~3 760 řádků, historicky
+- **`styles.css`** — všechen layout a komponenty (~4 300 řádků, historicky
   rozrostlé). ⚠️ Viz Pasti.
 - **`theme-violet.css`** — barevné tokeny, výchozí paleta
 - Malé CSS soubory variant: `no-badge`, `badge-*`, `kosik-barva`,
@@ -84,3 +93,21 @@ přepisuje `showThanks()`, je potřeba ošetřit obalením té funkce.
    které v repu nejsou, a spadne na fallback z HTML. Neopravovat.
 5. **Jména souborů se mění** — před editací si vypiš obsah složky. A když se
    změna neprojevila, bývá to cache: Ctrl+Shift+R.
+6. **`display:flex` nebo `grid` přebije atribut `hidden`.** Prvek zůstane
+   vidět, i když v konzoli hlásí `hidden = true`. Potřebuje vlastní pravidlo
+   `.třída[hidden]{display:none !important;}`. Narazil jsem na to čtyřikrát —
+   `.tip`, `.confirm`, `.summary-note`, `.timer-note`.
+7. **`theme-zelena.css` přebíjí barvy přes `!important`.** Když měníš barvu
+   něčeho v liště nebo v Mňau tipu a nic se neděje, musí se to napsat i tam.
+   Platí pro hodiny, proužek odpočtu, ikonu stavu i zalomení textu.
+8. **Soubory mají konce řádků CRLF.** Regex přes víc řádků musí mít `\r?\n`,
+   jinak nesedí. A `perl -i` bez přípony zálohy na Windows tiše nic neudělá —
+   otevři, přečti, zapiš.
+9. **Nenastavuj `position:relative` prvku, který je `absolute`.** Sebereš mu
+   tím polohu a spadne do toku. Pro `::before` je `absolute` kotva sám o sobě.
+10. **Dvouřádkové popisky tlačítek** se dělají `\n` v textu a
+    `white-space: pre-line` v CSS. `<br>` neprojde, protože texty tlačítek
+    plní JavaScript přes `textContent`.
+11. **Tlačítkový zákon.** Tlačítko, kterým se zákazník závazně zavazuje
+    zaplatit, musí být označené jednoznačně („Přibalit a zaplatit" projde,
+    vtipné názvy ne). Text vedle tlačítka zákon neomezuje.
