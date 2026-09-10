@@ -4218,14 +4218,19 @@ a,button{
    Lišta je zároveň o kus nižší — svislé odsazení bylo předimenzované.
    ============================================================ */
 .timer-note{
+  /* order musí být za odpočtem (ten má 1), jinak popisek předběhne
+     hodiny a odstrčí je doprostřed lišty. */
+  order:2;
   flex:1 1 auto;
   min-width:0;
+  text-align:center;
   font-size:.82rem;
   line-height:1.3;
   color:var(--ink-muted);
 }
 .timer-note[hidden]{display:none !important;}
-.summary[data-state="filled"] .timer-note{display:none;}
+.summary[data-state="filled"] .timer-note,
+.summary[data-state="konec"] .timer-note{display:none;}
 @media (max-width:639px){
   /* Prázdný stav měl svislé odsazení 16 px, na tak malý obsah moc.
      Musí to být i na .summary[data-state], jinak to pravidlo výš přebije. */

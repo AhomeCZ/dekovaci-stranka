@@ -205,7 +205,7 @@ bez nabídky</button>
         </div>
         <!-- Popisek k odpočtu. Samotné číslo neřeklo, co vyprší.
              Když se vyroluje hláška, popisek jí místo uvolní. -->
-        <span class="timer-note" id="timerNote">Zbývá do zalepení</span>
+        <span class="timer-note" id="timerNote">Ještě můžete něco přihodit</span>
         <!-- Hláška se vyroluje, až když zákazník klepne na hlavní tlačítko
              s prázdným košíkem. Napevno tu nevisí, aby lištu nezvyšovala. -->
         <div class="summary-note" id="summaryNote" hidden>
@@ -800,10 +800,14 @@ function nabidkaVyprsela(){
   vyprselo = true;
   vysypKosik();
   const note = document.getElementById('summaryNote');
-note.querySelector('strong').textContent = 'Už je zalepeno';
-note.querySelector('span').textContent = 'Věci navíc jsme vyndali.';
+  /* Nadpis v hlášce nemusí existovat — když v ní zbyde jen jeden
+     řádek, sáhnutí na querySelector by vrátilo null a shodilo
+     všechno pod sebou (Mňau tip, dlaždice, přepnutí stavu). */
+  const nadpis = note.querySelector('strong');
+  if (nadpis) nadpis.textContent = 'Čas vypršel';
+  note.querySelector('span').textContent = 'Věci navíc jsme vyndali.';
   ukazPoznamku();
-  /* Mňau tip zve k přibalení a dole zrovna stojí, že je zalepeno —
+  /* Mňau tip zve k přibalení a dole zrovna stojí, že je konec —
      dvě protichůdné věty vedle sebe, tak proužek zmizí. */
   document.querySelector('.tip').hidden = true;
   /* Košíky na dlaždicích už nic neudělají, ať to na nich je vidět. */
