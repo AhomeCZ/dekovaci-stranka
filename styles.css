@@ -4193,3 +4193,17 @@ a,button{
 .tip-lead{
   white-space:pre-line;
 }
+
+/* Horní řádek lišty rozbaluje košík, tak ať to je poznat i kurzorem.
+   Jen když v košíku něco je — jinak není co rozbalovat. */
+.summary[data-state="filled"] .summary-top{cursor:pointer;}
+/* Terč samotné šipky roste na 44 px, aniž by šipka zvětšila.
+   Pod 44 px se na mobilu trefuje špatně. */
+.summary-toggle{position:relative;}
+.summary-toggle::before{
+  content:"";
+  position:absolute;
+  top:50%;left:50%;
+  width:max(100%,44px);height:max(100%,44px);
+  transform:translate(-50%,-50%);
+}

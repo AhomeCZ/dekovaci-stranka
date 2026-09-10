@@ -640,10 +640,21 @@ cartItems.addEventListener('click', e => {
 });
 
 
-summaryToggle.addEventListener('click', () => {
+/* Rozbalení košíku: kliknutí bere celý horní řádek lišty, ne jen tu
+   šipku. Samotná šipka je na mobilu 30 px vysoká, což je pod hranicí
+   pohodlného terče (44 px) — a u rozbalovacího řádku je zvykem, že
+   se dá klepnout kamkoliv do něj. Šipka zůstává jako značka, že se
+   řádek rozbaluje, a jako ovládání pro klávesnici a čtečky. */
+function prepniKosik(){
   if (!count) return;
   expanded = !expanded;
   refresh();
+}
+summaryToggle.addEventListener('click', prepniKosik);
+summaryTop.addEventListener('click', e => {
+  /* Klepnutí na samotnou šipku si obslouží ona, ať se stav nepřepne dvakrát. */
+  if (e.target.closest('.summary-toggle')) return;
+  prepniKosik();
 });
 
 /* ---------- galerie v detailu produktu ---------- */
