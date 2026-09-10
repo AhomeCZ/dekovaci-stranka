@@ -4115,3 +4115,21 @@ a,button{
 /* Pruh s potvrzením má display:flex, a ten přebije [hidden] z prohlížeče —
    stejná past jako u pruhu "Mňau tip". Na koncové obrazovce musí zmizet. */
 .confirm[hidden]{display:none !important;}
+
+/* ============================================================
+   Hláška v liště se vyroluje až po klepnutí na hlavní tlačítko
+   ------------------------------------------------------------
+   Zavřená nesmí v řádku zabírat místo, proto [hidden] s !important —
+   display:grid by samotný atribut hidden přebil, stejně jako u .tip.
+   Rozbalení jede přes grid 0fr -> 1fr, stejně jako rozbalení košíku.
+   ============================================================ */
+.summary-note{
+  display:grid;
+  grid-template-rows:0fr;
+  opacity:0;
+  transition:grid-template-rows .32s cubic-bezier(.22,1,.36,1),
+             opacity .22s ease;
+}
+.summary-note.is-open{grid-template-rows:1fr;opacity:1;}
+.summary-note[hidden]{display:none !important;}
+.summary-note-inner{overflow:hidden;min-height:0;}

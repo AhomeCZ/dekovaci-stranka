@@ -35,7 +35,9 @@ Doplatek se v každém způsobu platby chová jinak, proto tři samostatné soub
 
 U karty je ve slovech „zaplatit", protože následuje přesměrování do brány.
 
-S prázdným košíkem tlačítko nabídku neukončuje — jen odroluje k produktům.
+S prázdným košíkem tlačítko nabídku neukončuje — vyroluje v liště hlášku
+„Krabička je stále otevřená / Ještě můžete něco přihodit.", která zmizí,
+jakmile zákazník něco přidá.
 Nabídku odmítá výhradně „Nechci", aby odmítnutí nebylo na hlavním tlačítku.
 U zbylých dvou se online neplatí nic, tak tam nemá co dělat.
 

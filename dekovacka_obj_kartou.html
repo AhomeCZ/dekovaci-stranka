@@ -198,6 +198,14 @@
             <svg class="paw" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#i-paw"/></svg>
           </div>
         </div>
+        <!-- Hláška se vyroluje, až když zákazník klepne na hlavní tlačítko
+             s prázdným košíkem. Napevno tu nevisí, aby lištu nezvyšovala. -->
+        <div class="summary-note" id="summaryNote" hidden>
+          <div class="summary-note-inner">
+            <strong>Krabička je stále otevřená</strong>
+            <span>Ještě můžete něco přihodit.</span>
+          </div>
+        </div>
         <div class="total">
           <span>K doplacení:</span>
           <strong id="total">0 Kč</strong>
@@ -451,6 +459,8 @@ function refresh(){
   total = [...cart.entries()].reduce((sum, [index, qty]) => sum + products[index].p * qty, 0);
   totalEl.textContent = total + ' Kč';
   ctaText.textContent = count ? 'Přibalit a zaplatit' : 'Vyberte něco navíc';
+  /* S plným košíkem lišta potřebuje místo na cenu, hláška jde pryč. */
+  if (count) schovejPoznamku();
   summary.dataset.state = count ? 'filled' : 'empty';
   summaryToggle.hidden = !count;
   summaryToggle.setAttribute('aria-expanded', String(expanded && !!count));
@@ -745,10 +755,25 @@ setInterval(() => {
 /* ---------- QR platba ---------- */
 const backdrop   = document.getElementById('backdrop');
 
+/* Hláška v liště — vyroluje se klepnutím na hlavní tlačítko s prázdným
+   košíkem. Grid 0fr -> 1fr je stejný postup jako u rozbalení košíku. */
+function ukazPoznamku(){
+  const note = document.getElementById('summaryNote');
+  if (!note.hidden) return;
+  note.hidden = false;
+  requestAnimationFrame(() => note.classList.add('is-open'));
+}
+function schovejPoznamku(){
+  const note = document.getElementById('summaryNote');
+  note.classList.remove('is-open');
+  note.hidden = true;
+}
+
 function openQR(){
-  /* Prázdný košík — tlačítko vyzývá k výběru, tak k výběru i zavede.
+
+  /* Prázdný košík — tlačítko vyzývá k výběru, tak hláškou připomene, že jde ještě přihodit.
      Nabídku neukončuje, od toho je "Nechci". */
-  if (!count){ document.getElementById('offerSection').scrollIntoView({behavior:'smooth', block:'start'}); return; }
+  if (!count){ ukazPoznamku(); return; }
   /* Odpočet je lhůta na zahájení platby. Po vypršení už nový pokus
      nezačíná, rozdělaný se ale dokončit smí. */
   if (!nabidkaBezi()){ ukazStav('vyprselo'); return; }
