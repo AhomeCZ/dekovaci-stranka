@@ -121,10 +121,12 @@
 
       <img class="mascot mascot--tip" src="assets/krabicka.png" alt="">
       <div class="decline-done-copy">
-        <strong id="declineHeadline">Díky! Balíme 🐾</strong>
-        <span>Objednávku už chystáme, brzy vyrazí k vám.</span>
-        <a class="decline-btn decline-shop-link" href="#">← Zpět do obchodu</a>
+        <strong id="declineHeadline">Díky! Už balíme <svg class="dik-paw" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#i-paw"/></svg></strong>
+        <b class="decline-lead">Objednávka už je v dobrých tlapkách</b>
+        <span>Vaši objednávku máme v pořádku a už se o ni staráme.</span>
+        <span>Pečlivě ji zabalíme a jakmile vyrazí na cestu, dáme vám vědět e-mailem.</span>
       </div>
+      <a class="decline-btn decline-shop-link" href="#">← Zpět do obchodu</a>
     </div>
   </div>
 
@@ -694,7 +696,7 @@ setInterval(() => {
    jako po "Nechci"), jen s nadpisem podle toho, jestli se něco
    přibalilo. */
 document.getElementById('cta').addEventListener('click', () => {
-  showThanks('Díky! Balíme 🐾');
+  showThanks('Díky! Už balíme');
 });
 
 addEventListener('keydown', e => {
@@ -838,14 +840,21 @@ function showThanks(headline){
      Na koncové obrazovce už jen zabíral místo nad děkováním. */
   document.querySelector(".confirm").hidden = true;
   document.getElementById('declineResult').hidden = false;
-  if (headline) document.getElementById('declineHeadline').textContent = headline;
+  /* Nadpis se přepisuje podle toho, jak zákazník na kartu došel.
+     Tlapka je uvnitř nadpisu, takže se po přepsání vrací zpátky. */
+  if (headline){
+    const h = document.getElementById('declineHeadline');
+    const tlapka = h.querySelector('svg');
+    h.textContent = headline + ' ';
+    if (tlapka) h.appendChild(tlapka);
+  }
   window.scrollTo({top:0, behavior:'smooth'});
 }
 
 
 document.getElementById('declineBtn').addEventListener('click', () => {
   vysypKosik();
-  showThanks('Díky! Balíme 🐾');
+  showThanks('Díky! Už balíme');
 });
 
 /* "Skrýt nabídku" nahoře dělá totéž co "Nechci" dole — posílá se

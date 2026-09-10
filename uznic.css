@@ -174,3 +174,53 @@
     width:auto;
   }
 }
+
+/* ============================================================
+   Děkovací karta na závěr — delší text, tlačítko přes celou šířku
+   ------------------------------------------------------------
+   Jednořádkový text nechával kartu poloprázdnou a působila
+   nedodělaně. Text je teď rozdělený na podnadpis a dva odstavce,
+   tlačítko sjelo pod kočku i text, aby kartu zakončilo.
+   ============================================================ */
+.decline-done{flex-wrap:wrap;}
+.decline-done-copy{gap:8px;}
+.decline-lead{
+  font-family:'Poppins',system-ui,sans-serif;
+  font-size:.95rem;
+  font-weight:700;
+  line-height:1.3;
+  color:#241B3D;
+  max-width:24ch;
+}
+.decline-shop-link{
+  flex:1 0 100%;
+  width:100%;
+  margin-top:14px;
+}
+@media (min-width:640px){
+  /* Nadpis, podnadpis i odstavce začínají na stejné svislici —
+     zarovnání doprava text vedle kočky rozdrobilo. */
+  .decline-done-copy{align-items:flex-start;text-align:left;}
+  .decline-lead{font-size:1.05rem;}
+  .decline-shop-link{width:100%;}
+}
+
+/* Tlapka v nadpisu děkovací karty. Nemůže mít třídu .heading-paw —
+   ta je na stránce globálně schovaná (zklidnění barev ve styles.css). */
+#declineHeadline .dik-paw{
+  display:inline-block;
+  width:1.05em;height:1.05em;
+  flex:0 0 auto;
+  vertical-align:-.12em;
+  color:currentColor;
+}
+/* Kočka drží levý sloupec, text se vedle ní smrskne místo zalomení.
+   Bez toho ho flex-wrap odsunul pod obrázek. */
+.decline-done .mascot--tip{flex:0 0 38%;}
+.decline-done-copy{flex:1 1 0;min-width:0;}
+/* Zakončovací tlačítko — plná šířka, čitelný text, bez podtržení odkazu. */
+.decline-shop-link{
+  text-decoration:none;
+  font-size:1rem;
+  font-weight:700;
+}

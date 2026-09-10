@@ -18,8 +18,10 @@
     vedle:'Vejde se tam ještě něco!',       /* řádek pod nadpisem */
     pod:'',                                 /* druhý řádek pod tím; prázdné = žádný */
     /* děkovací karta po odmítnutí / uzavření objednávky */
-    dekujemeNadpis:'Díky! Už balíme 🐾',
-    dekujemeText:'Jakmile objednávka vyrazí, dáme vědět.'
+    dekujemeNadpis:'Díky! Už balíme',
+    dekujemeLead:'Objednávka už je v dobrých tlapkách',
+    dekujemeText:'Vaši objednávku máme v pořádku a už se o ni staráme.',
+    dekujemeText2:'Pečlivě ji zabalíme a jakmile vyrazí na cestu, dáme vám vědět e-mailem.'
   };
   /* ---------- /ZADÁNÍ ---------- */
 
@@ -64,10 +66,20 @@
      takže "Už balíme" by byla nepravda) — pozná se podle atributu. */
   const vlastniTexty = !!document.querySelector('.decline-done[data-vlastni-texty]');
   const nadpisDik = document.getElementById('declineHeadline');
-  const textDik = document.querySelector('.decline-done-copy span');
+  const leadDik = document.querySelector('.decline-done-copy .decline-lead');
+  const textyDik = document.querySelectorAll('.decline-done-copy span');
+  /* Tlapka je uvnitř nadpisu, po přepsání textu se vrací zpátky. */
+  function napisNadpis(){
+    if (!nadpisDik) return;
+    const tlapka = nadpisDik.querySelector('svg');
+    nadpisDik.textContent = TEXTY.dekujemeNadpis + ' ';
+    if (tlapka) nadpisDik.appendChild(tlapka);
+  }
   if (!vlastniTexty){
-    if (nadpisDik) nadpisDik.textContent = TEXTY.dekujemeNadpis;
-    if (textDik) textDik.textContent = TEXTY.dekujemeText;
+    napisNadpis();
+    if (leadDik) leadDik.textContent = TEXTY.dekujemeLead;
+    if (textyDik[0]) textyDik[0].textContent = TEXTY.dekujemeText;
+    if (textyDik[1]) textyDik[1].textContent = TEXTY.dekujemeText2;
   }
 
   /* Hotovo — odkrýt text a maskota (do teď schované v theme-zelena.css,
@@ -81,9 +93,7 @@
     const puvodni = window.showThanks;
     window.showThanks = function(headline){
       puvodni(headline);
-      if (nadpisDik && !vlastniTexty){
-        nadpisDik.textContent = TEXTY.dekujemeNadpis;
-      }
+      if (!vlastniTexty) napisNadpis();
     };
   }
 })();
