@@ -90,22 +90,6 @@
       <svg viewBox="0 0 24 24" fill="none"><path d="M6.5 12.4l3.6 3.6L18 8.2" stroke="#fff" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
     </span>
     <h1>Objednávka je zaplacená</h1>
-    <p class="confirm-mail">
-      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="#i-mail"/></svg>
-      <span><span id="mailText">jana.novakova@email.cz</span></span>
-    </p>
-    <button class="edit-btn" id="mailToggle" type="button" aria-label="Upravit údaje">
-      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M4 20h4l10-10a2.5 2.5 0 10-3.5-3.5L4.5 16.5 4 20z" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"/>
-        <path d="M13.5 7l3.5 3.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
-      </svg>
-      <span class="edit-label">Upravit</span>
-    </button>
-    <div class="mail-edit" id="mailEdit" hidden>
-      <input type="email" id="mailInput" value="jana.novakova@email.cz" aria-label="E-mailová adresa">
-      <button class="btn-solid" id="mailSave" type="button">Uložit</button>
-      <button class="btn-ghost" id="mailCancel" type="button">Zrušit</button>
-    </div>
   </section>
 
   <!-- 2 ▸ TIP OD MASKOTA -->
@@ -208,11 +192,6 @@
       </button>
       <div class="cart-panel" id="cartPanel">
         <div class="cart-panel-body">
-          <div class="cart-panel-head">
-            <strong>Přidané produkty</strong>
-            <span id="cartCount">0 položek</span>
-            <button class="cart-clear" id="cartClear" type="button">Odebrat vše</button>
-          </div>
           <div class="cart-items" id="cartItems" aria-live="polite"></div>
         </div>
       </div>
@@ -289,26 +268,6 @@
 </div>
 
 <script>
-/* ---------- e-mail ---------- */
-const mailToggle = document.getElementById('mailToggle');
-const mailEdit   = document.getElementById('mailEdit');
-const mailInput  = document.getElementById('mailInput');
-const mailText   = document.getElementById('mailText');
-
-document.getElementById('mailToggle').addEventListener('click', () => {
-  mailEdit.hidden = !mailEdit.hidden;
-  if (!mailEdit.hidden) { mailInput.focus(); mailInput.select(); }
-});
-document.getElementById('mailCancel').addEventListener('click', () => {
-  mailInput.value = mailText.textContent;
-  mailEdit.hidden = true;
-});
-document.getElementById('mailSave').addEventListener('click', () => {
-  const v = mailInput.value.trim();
-  if (!v.includes('@')) { mailInput.focus(); return; }
-  mailText.textContent = v;
-  mailEdit.hidden = true;
-});
 
 /* ---------- produkty ---------- */
 const photos = [
@@ -350,7 +309,6 @@ const ctaText  = document.getElementById('ctaText');
 const summaryTop = document.querySelector('.summary-top');
 const summaryToggle = document.getElementById('summaryToggle');
 const cartItems = document.getElementById('cartItems');
-const cartCount = document.getElementById('cartCount');
 const productBackdrop = document.getElementById('productBackdrop');
 const productSlides = document.getElementById('productSlides');
 const productTitle = document.getElementById('productTitle');
@@ -442,9 +400,8 @@ function updateBar(){
 }
 addEventListener('scroll', updateBar, {passive:true});
 
-/* Vysype košík a srovná karty produktů i lištu. Používá to
-   "Nechci" (nechci nic přibalit) i "Odebrat vše" v košíku —
-   po obou musí být stav vidět, ne jen spočítaný jinak. */
+/* Vysype košík a srovná karty produktů i lištu. Po odmítnutí
+   nabídky musí být prázdný stav vidět, ne jen spočítaný jinak. */
 function vysypKosik(){
   const bylo = [...cart.keys()];
   cart.clear();
@@ -462,7 +419,6 @@ function refresh(){
   summaryToggle.setAttribute('aria-expanded', String(expanded && !!count));
   summaryToggle.setAttribute('aria-label', expanded ? 'Sbalit položky v košíku' : 'Rozbalit položky v košíku');
   summary.classList.toggle('is-expanded', expanded && !!count);
-  cartCount.textContent = count + ' ' + (count === 1 ? 'položka' : (count >= 2 && count <= 4 ? 'položky' : 'položek'));
   renderCart();
 }
 
@@ -624,7 +580,6 @@ cartItems.addEventListener('click', e => {
   refresh();
 });
 
-document.getElementById('cartClear').addEventListener('click', vysypKosik);
 
 summaryToggle.addEventListener('click', () => {
   if (!count) return;
