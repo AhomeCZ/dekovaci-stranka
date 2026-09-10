@@ -4266,3 +4266,10 @@ a,button{
   line-height:1.15;
   text-align:center;
 }
+
+/* "Zaplatit jinak" ve stavech po nepovedené platbě — zatím vypnuté,
+   v markupu je s atributem hidden. Pořadí ve sloupci je připravené,
+   ať to po zapnutí nesjede na špatné místo: opakovat, zaplatit jinak,
+   teprve pak odchod. */
+.state-actions .state-alt{order:2;}
+.state-actions .state-secondary{order:3;}

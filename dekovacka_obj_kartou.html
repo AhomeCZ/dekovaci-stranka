@@ -153,7 +153,17 @@ bez nabídky</button>
       </div>
       <span class="state-text" id="stateText">Vaše původní objednávka je zaplacená a v pořádku. Nepodařilo se zaplatit jen věci navíc.</span>
       <div class="state-actions">
-        <button class="cta state-primary" id="statePrimary" type="button">Zkusit znovu</button>
+                <button class="cta state-primary" id="statePrimary" type="button">Zkusit znovu</button>
+        <!-- PŘIPRAVENO, ZATÍM VYPNUTÉ ----------------------------------
+             "Zaplatit jinak" má vést do platební brány rovnou na výběr
+             metody. Zatím je tu jen vizuálně, ať je vidět, kam ve sloupci
+             patří a jak vypadá. Až se bude zapínat:
+               1) odeberte atribut hidden
+               2) doplňte obsluhu kliknutí
+               3) v ukazStav() ho schovejte pro stav "vyprselo" —
+                  po vypršení už není co platit.
+             ------------------------------------------------------------- -->
+        <button class="decline-btn state-alt" id="stateAlt" type="button" hidden>Zaplatit jinak</button>
         <button class="decline-btn state-secondary decline-2r" id="stateSecondary" type="button">Pokračovat
 bez nabídky</button>
       </div>
