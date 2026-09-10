@@ -117,7 +117,8 @@
       <strong><i><b>MňauTip</b><strong style="background-color: rgb(248, 240, 254); color: rgb(42, 34, 51); display: inline !important;">: Přibalit?</strong></i><svg class="heading-paw" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#i-paw"></use></svg></strong>
       <span>Vejde se tam ještě něco!</span>
     </span>
-    <button class="decline-btn tip-hide" id="hideOfferBtn" type="button">Nechci</button>
+    <button class="decline-btn tip-hide decline-2r" id="hideOfferBtn" type="button">Pokračovat
+bez nabídky</button>
   </div>
 
   <!-- 3c ▸ STAV PO ODMÍTNUTÍ (skryté, dokud nekliknete výš) -->
@@ -153,7 +154,8 @@
       <span class="state-text" id="stateText">Vaše původní objednávka je zaplacená a v pořádku. Nepodařilo se zaplatit jen věci navíc.</span>
       <div class="state-actions">
         <button class="cta state-primary" id="statePrimary" type="button">Zkusit znovu</button>
-        <button class="decline-btn state-secondary" id="stateSecondary" type="button">Nechci</button>
+        <button class="decline-btn state-secondary decline-2r" id="stateSecondary" type="button">Pokračovat
+bez nabídky</button>
       </div>
     </div>
   </div>
@@ -224,7 +226,8 @@
       <div class="cta-row">
         <!-- "Nechci" vlevo od hlavního tlačítka -->
         <p class="decline-offer" id="declineOfferWrap">
-          <button class="decline-btn" id="declineBtn" type="button">Nechci</button>
+          <button class="decline-btn decline-2r" id="declineBtn" type="button">Pokračovat
+bez nabídky</button>
         </p>
         <button class="cta" id="cta" type="button">
         <span id="ctaText">Vyberte něco navíc</span>
@@ -790,6 +793,7 @@ function nabidkaVyprsela(){
   document.querySelectorAll('#grid .add').forEach(b => { b.disabled = true; });
   /* Odmítat už není co. */
   document.getElementById('declineOfferWrap').hidden = true;
+  summary.dataset.state = 'konec';
 }
 
 function schovejPoznamku(){
@@ -1007,14 +1011,14 @@ const STAVY = {
     nadpis: 'Platbu jste zrušili',
     text: 'Nic se neděje. Vaše původní objednávka je zaplacená a v pořádku. Neproběhla jen platba za věci navíc.',
     hlavni: 'Zkusit znovu',
-    vedlejsi: 'Nechci'
+    vedlejsi: 'Pokračovat\nbez nabídky'
   },
   zamitnuto: {
     ikona: '#i-state-info',
     nadpis: 'Platba se nepodařila',
     text: 'Vaše původní objednávka je zaplacená a v pořádku. Nepodařilo se zaplatit jen věci navíc.',
     hlavni: 'Zkusit znovu',
-    vedlejsi: 'Nechci'
+    vedlejsi: 'Pokračovat\nbez nabídky'
   },
   vyprselo: {
     ikona: '#i-state-clock',

@@ -348,6 +348,7 @@ button,input{font:inherit;color:inherit;}
 .timer .prog{fill:none;stroke:url(#ringGrad);stroke-width:5;stroke-linecap:round;
   transition:stroke-dashoffset 1s linear;}
 .timer.is-urgent .prog{stroke:var(--magenta);}
+.timer.is-urgent::after{stroke:var(--magenta) !important;}
 .timer.is-done .prog{stroke:#C9C3D2;}
 .timer-face{
   position:absolute;inset:0;
@@ -382,6 +383,10 @@ button,input{font:inherit;color:inherit;}
 
 .summary[data-state="empty"] .total,
 .summary[data-state="empty"] .cta{display:none;}
+.summary[data-state="konec"] .cat-fx{display:none;}
+.summary[data-state="konec"] .summary-note{text-align:left;}
+.summary[data-state="konec"] .total,
+.summary[data-state="konec"] .summary-toggle{display:none;}
 
 /* ============================================================
    ≥700px — tablet
@@ -3832,7 +3837,7 @@ a,button{
 
   /* 3. řádek: tlačítko, o něco nižší, ať se lišta nerozrostla */
   .cta-row{margin-top:8px;}
-  .cta{min-height:44px;padding:8px 16px;font-size:.95rem;}
+  .cta{min-height: 44px;padding:8px 16px;font-size:.95rem;height: 44px;}
 
   /* kočka v liště bere místo textu — menší a mimo tok */
   .summary .cat-fx{width:74px;}
@@ -4169,4 +4174,14 @@ a,button{
   opacity:.4;
   cursor:not-allowed;
   box-shadow:none;
+}
+
+/* „Pokračovat bez nabídky" na dvou řádcích — vedle hlavního tlačítka
+   je na lištu málo místa a na jeden řádek by se to nevešlo.
+   pre-line kvůli tomu, že stejný popisek plní i JS u stavů po platbě,
+   a ten umí jen textContent, ne značky. */
+.decline-2r{
+  white-space:pre-line;
+  line-height:1.15;
+  text-align:center;
 }
