@@ -15,7 +15,7 @@
   };
   const TEXTY = {
     nadpis:'Mňau tip: Přibalit?',           /* kurzívou a tučně */
-    vedle:'Vejde se tam\nještě něco!',       /* řádek pod nadpisem */
+    vedle:'Vejde se toho víc,\npojede to spolu.',       /* řádek pod nadpisem */
     pod:'',                                 /* druhý řádek pod tím; prázdné = žádný */
     /* děkovací karta po odmítnutí / uzavření objednávky */
     dekujemeNadpis:'Díky! Už balíme',
