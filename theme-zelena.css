@@ -149,11 +149,19 @@ html[data-palette="custom"] .tip{
   visibility:hidden;
   animation:z-reveal 0s 1.5s forwards;
 }
-html.z-theme-ready .tip-copy,
-html.z-theme-ready .tip .mascot--tip{
+html.z-theme-ready .tip-copy{
   visibility:visible;
   animation:none;
 }
+/* Maskotovi se animace vrací, neruší. "animation:none" tady dřív
+   shodilo i vrtění oušek z hlavních stylů — pojistka proti
+   probliknutí textů ho vzala s sebou. */
+html.z-theme-ready .tip .mascot--tip{
+  visibility:visible;
+  animation:ousi-vrt-vic 2.6s ease-in-out infinite;
+}
+html.z-theme-ready[data-mascot="klid"] .tip .mascot--tip{animation-duration:3.6s;}
+html.z-theme-ready[data-mascot="super"] .tip .mascot--tip{animation-duration:1.6s;}
 @keyframes z-reveal{to{visibility:visible;}}
 
 /* Nadpis a text pod sebou, zarovnané doleva. */
