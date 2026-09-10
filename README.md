@@ -29,11 +29,14 @@ Doplatek se v každém způsobu platby chová jinak, proto tři samostatné soub
 
 | Stránka | Prázdný košík | Něco přidáno |
 |---|---|---|
-| kartou | Nic nepřibalím | **Přibalit a zaplatit** |
+| kartou | **Vyberte něco navíc** | **Přibalit a zaplatit** |
 | dobírka | Uzavřít objednávku | Uzavřít objednávku |
 | převodem | Uzavřít objednávku | Uzavřít objednávku |
 
 U karty je ve slovech „zaplatit", protože následuje přesměrování do brány.
+
+S prázdným košíkem tlačítko nabídku neukončuje — jen odroluje k produktům.
+Nabídku odmítá výhradně „Nechci", aby odmítnutí nebylo na hlavním tlačítku.
 U zbylých dvou se online neplatí nic, tak tam nemá co dělat.
 
 ---

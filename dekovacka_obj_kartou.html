@@ -217,7 +217,7 @@
           <button class="decline-btn" id="declineBtn" type="button">Nechci</button>
         </p>
         <button class="cta" id="cta" type="button">
-        <span id="ctaText">Nic nepřibalím</span>
+        <span id="ctaText">Vyberte něco navíc</span>
         <svg aria-hidden="true"><use href="#i-chev"/></svg>
         </button>
       </div>
@@ -450,7 +450,7 @@ function refresh(){
   count = [...cart.values()].reduce((sum, qty) => sum + qty, 0);
   total = [...cart.entries()].reduce((sum, [index, qty]) => sum + products[index].p * qty, 0);
   totalEl.textContent = total + ' Kč';
-  ctaText.textContent = count ? 'Přibalit a zaplatit' : 'Nic nepřibalím';
+  ctaText.textContent = count ? 'Přibalit a zaplatit' : 'Vyberte něco navíc';
   summary.dataset.state = count ? 'filled' : 'empty';
   summaryToggle.hidden = !count;
   summaryToggle.setAttribute('aria-expanded', String(expanded && !!count));
@@ -746,8 +746,9 @@ setInterval(() => {
 const backdrop   = document.getElementById('backdrop');
 
 function openQR(){
-  /* Prázdný košík — není co doplácet, takže rovnou děkovací karta. */
-  if (!count){ showThanks('Díky! Balíme 🐾'); return; }
+  /* Prázdný košík — tlačítko vyzývá k výběru, tak k výběru i zavede.
+     Nabídku neukončuje, od toho je "Nechci". */
+  if (!count){ document.getElementById('offerSection').scrollIntoView({behavior:'smooth', block:'start'}); return; }
   /* Odpočet je lhůta na zahájení platby. Po vypršení už nový pokus
      nezačíná, rozdělaný se ale dokončit smí. */
   if (!nabidkaBezi()){ ukazStav('vyprselo'); return; }
@@ -896,7 +897,7 @@ addEventListener('keydown', e => {
 <!-- "Už nic nechci" — odmítnutí nabídky -->
 <script>
 /* Finální obrazovka — děkovací karta místo nabídky. Používá ji
-   jak "Nechci", tak "Uzavřít objednávku". */
+   "Nechci" i zaplacený doplatek. */
 /* Nabídka, pruh "Mňau tip" i spodní lišta zmizí. Používají to všechny
    konce — odmítnutí, zaplacení i stavy po návratu z brány. */
 function skryjNabidku(){
