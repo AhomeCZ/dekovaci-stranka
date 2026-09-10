@@ -285,7 +285,10 @@ bez nabídky</button>
         <span class="price-old" id="productOldPrice"></span>
         <span class="price" id="productPrice"></span>
       </div>
-      <button class="modal-close" id="productClose" type="button">Zavřít</button>
+      <button class="modal-close" id="productAdd" type="button">
+        <svg class="modal-plus" viewBox="0 0 24 24" aria-hidden="true"><use href="#i-plus"/></svg>
+        <span>Přidat</span>
+      </button>
     </div>
   </div>
 </div>
@@ -363,6 +366,9 @@ const cart = new Map();
 let expanded = false;
 let visible = 0;
 let loading = false;
+/* Který produkt je zrovna otevřený v detailu — tlačítko "Přidat"
+   v okně musí vědět, co přidává. */
+let otevrenyProdukt = null;
 
 /* Superman zůstává uvnitř sticky souhrnu, aby nezakrýval produkty. */
 (function(){
@@ -581,6 +587,7 @@ products.forEach((item, i) => {
       '<span class="add-label">Přidat</span>' +
     '</button>';
 
+  li.dataset.index = i;
   li.querySelector('.thumb').addEventListener('click', () => openProduct(i));
 
   li.querySelector('.add').addEventListener('click', e => {
@@ -693,6 +700,7 @@ document.getElementById('galNext').addEventListener('click', () => posunNaFotku(
 
 
 function openProduct(index){
+  otevrenyProdukt = index;
   const item = products[index];
   vytvorGalerii(photos[index % photos.length], item.n);
   productTitle.textContent = item.n;
@@ -701,7 +709,7 @@ function openProduct(index){
   productPrice.textContent = item.p + ' Kč';
   productBackdrop.hidden = false;
   document.body.style.overflow = 'hidden';
-  document.getElementById('productClose').focus();
+  document.getElementById('productAdd').focus();
 }
 
 function closeProduct(){
@@ -709,7 +717,14 @@ function closeProduct(){
   document.body.style.overflow = '';
 }
 
-document.getElementById('productClose').addEventListener('click', closeProduct);
+document.getElementById('productAdd').addEventListener('click', () => {
+  /* Přidání jede přes tlačítko na dlaždici, aby se chování ani animace
+     nikdy nerozešly se dvěma kopiemi téhož kódu. Zavřít okno jde
+     křížkem vpravo nahoře nebo Escapem. */
+  const dlazdice = document.querySelector('#grid li[data-index="' + otevrenyProdukt + '"] .add');
+  if (dlazdice) dlazdice.click();
+  closeProduct();
+});
 document.getElementById('productX').addEventListener('click', closeProduct);
 productBackdrop.addEventListener('click', e => {
   if (e.target === productBackdrop) closeProduct();

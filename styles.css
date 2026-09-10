@@ -4241,3 +4241,14 @@ a,button{
 @media (max-width:359px){
   .timer-note{font-size:.72rem;}
 }
+
+/* Tlačítko v detailu produktu přidává, takže potřebuje ikonu plus.
+   Zavřít okno jde křížkem vpravo nahoře nebo Escapem — hlavní zelené
+   tlačítko v prodejním okně nemá zavírat prodej. */
+.modal-close{gap:8px;}
+.modal-plus{
+  width:19px;height:19px;
+  flex:0 0 auto;
+  stroke:currentColor;
+  fill:none;
+}
