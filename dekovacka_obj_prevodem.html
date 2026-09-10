@@ -503,7 +503,7 @@ function refresh(){
   count = [...cart.values()].reduce((sum, qty) => sum + qty, 0);
   total = [...cart.entries()].reduce((sum, [index, qty]) => sum + products[index].p * qty, 0);
   totalEl.textContent = total + ' Kč';
-  ctaText.textContent = count ? 'Přibalit a zobrazit QR\nk platbě' : 'Přidejte něco\npro radost';
+  ctaText.textContent = count ? 'Přibalit a\nzobrazit QR k platbě' : 'Přidejte něco\npro radost';
   summary.dataset.state = count ? 'filled' : 'empty';
   summaryToggle.hidden = !count;
   summaryToggle.setAttribute('aria-expanded', String(expanded && !!count));
