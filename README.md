@@ -82,7 +82,7 @@ košíku jde jen z dlaždice, ne z detailu.
 Karta a dobírka mají **jednu koncovou obrazovku** — „Nechci" i uzavření
 objednávky vedou na tu samou:
 
-> **Díky! Už balíme** 🐾
+> **Děkujeme!** 🐾
 > **Objednávka už je v dobrých tlapkách**
 >
 > Vaši objednávku máme v pořádku a už se o ni staráme.

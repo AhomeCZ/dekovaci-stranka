@@ -18,7 +18,7 @@
     vedle:'Vejde se tam ještě něco!',       /* řádek pod nadpisem */
     pod:'',                                 /* druhý řádek pod tím; prázdné = žádný */
     /* děkovací karta po odmítnutí / uzavření objednávky */
-    dekujemeNadpis:'Díky! Už balíme',
+    dekujemeNadpis:'Děkujeme!',
     dekujemeLead:'Objednávka už je v dobrých tlapkách',
     dekujemeText:'Vaši objednávku máme v pořádku a už se o ni staráme.',
     dekujemeText2:'Pečlivě ji zabalíme a jakmile vyrazí na cestu, dáme vám vědět e-mailem.'
