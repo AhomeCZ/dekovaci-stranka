@@ -107,8 +107,7 @@
     <svg class="tip-watermark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#i-paw"/></svg>
     <span class="tip-copy">
       <strong>Mňau tip: Přibalit? <svg class="heading-paw" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#i-paw"/></svg></strong>
-      <span>Vejde se toho víc,
-pojede to spolu.</span>
+      <span>Vejde se tam ještě něco!</span>
     </span>
     <button class="decline-btn tip-hide decline-2r" id="hideOfferBtn" type="button">Dokončit
 bez nabídky</button>
@@ -123,7 +122,7 @@ bez nabídky</button>
 
       <img class="mascot mascot--tip" src="assets/krabicka.png" alt="">
       <div class="decline-done-copy">
-        <strong id="declineHeadline">Díky! Už balíme <svg class="dik-paw" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#i-paw"/></svg></strong>
+        <strong id="declineHeadline">Děkujeme! <svg class="dik-paw" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#i-paw"/></svg></strong>
         <b class="decline-lead">Objednávka už je v dobrých tlapkách</b>
         <span>Vaši objednávku máme v pořádku a už se o ni staráme.</span>
         <span>Pečlivě ji zabalíme a jakmile vyrazí na cestu, dáme vám vědět e-mailem.</span>
@@ -728,7 +727,7 @@ setInterval(() => {
    jako po "Nechci"), jen s nadpisem podle toho, jestli se něco
    přibalilo. */
 document.getElementById('cta').addEventListener('click', () => {
-  showThanks('Díky! Už balíme');
+  showThanks('Děkujeme!');
 });
 
 addEventListener('keydown', e => {
@@ -886,7 +885,7 @@ function showThanks(headline){
 
 document.getElementById('declineBtn').addEventListener('click', () => {
   vysypKosik();
-  showThanks('Díky! Už balíme');
+  showThanks('Děkujeme!');
 });
 
 /* "Skrýt nabídku" nahoře dělá totéž co "Nechci" dole — posílá se

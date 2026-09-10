@@ -112,8 +112,7 @@
     <svg class="tip-watermark" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#i-paw"/></svg>
     <span class="tip-copy">
       <strong>Mňau tip: Přibalit? <svg class="heading-paw" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#i-paw"/></svg></strong>
-      <span>Vejde se toho víc,
-pojede to spolu.</span>
+      <span>Vejde se tam ještě něco!</span>
     </span>
     <button class="decline-btn tip-hide decline-2r" id="hideOfferBtn" type="button">Dokončit
 bez nabídky</button>
@@ -128,7 +127,7 @@ bez nabídky</button>
 
       <img class="mascot mascot--tip" src="assets/krabicka.png" alt="">
       <div class="decline-done-copy">
-        <strong id="declineHeadline">Děkujeme 🐾</strong>
+        <strong id="declineHeadline">Děkujeme <svg class="dik-paw" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#i-paw"/></svg></strong>
         <span>Objednávku máme u sebe, čeká na zaplacení.</span>
       </div>
     </div>
@@ -920,7 +919,7 @@ setInterval(() => {
    přibalilo. */
 document.getElementById('cta').addEventListener('click', () => {
   nastavPlatbu(true);
-  showThanks('Děkujeme 🐾');
+  showThanks('Děkujeme');
 });
 
 addEventListener('keydown', e => {
@@ -1064,7 +1063,14 @@ function showThanks(headline){
      Na koncové obrazovce už jen zabíral místo nad děkováním. */
   document.querySelector(".confirm").hidden = true;
   document.getElementById('declineResult').hidden = false;
-  if (headline) document.getElementById('declineHeadline').textContent = headline;
+  /* Nadpis se přepisuje podle toho, jak zákazník na kartu došel.
+     Tlapka je uvnitř nadpisu, takže se po přepsání vrací zpátky. */
+  if (headline){
+    const h = document.getElementById('declineHeadline');
+    const tlapka = h.querySelector('svg');
+    h.textContent = headline + ' ';
+    if (tlapka) h.appendChild(tlapka);
+  }
   window.scrollTo({top:0, behavior:'smooth'});
 }
 
@@ -1072,7 +1078,7 @@ function showThanks(headline){
 document.getElementById('declineBtn').addEventListener('click', () => {
   vysypKosik();
   nastavPlatbu(false);
-  showThanks('Děkujeme 🐾');
+  showThanks('Děkujeme');
 });
 
 /* "Skrýt nabídku" nahoře dělá totéž co "Nechci" dole — posílá se
