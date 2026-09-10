@@ -4198,8 +4198,9 @@ a,button{
    Jen když v košíku něco je — jinak není co rozbalovat. */
 .summary[data-state="filled"] .summary-top{cursor:pointer;}
 /* Terč samotné šipky roste na 44 px, aniž by šipka zvětšila.
-   Pod 44 px se na mobilu trefuje špatně. */
-.summary-toggle{position:relative;}
+   Pod 44 px se na mobilu trefuje špatně. Pozici tady NENASTAVOVAT —
+   šipka je position:absolute a visí na okraji lišty přes top:-14px,
+   relative by ji shodilo do toku. Absolute stačí i pro ::before. */
 .summary-toggle::before{
   content:"";
   position:absolute;
