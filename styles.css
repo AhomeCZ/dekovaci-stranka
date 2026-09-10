@@ -4208,3 +4208,31 @@ a,button{
   width:max(100%,44px);height:max(100%,44px);
   transform:translate(-50%,-50%);
 }
+
+/* ============================================================
+   Popisek k odpočtu — zaplní prázdno v liště a pojmenuje číslo
+   ------------------------------------------------------------
+   Mezi hodinami a kočkou zbývalo přes 200 px prázdna a samotné
+   "14:59" neříkalo, co vyprší. Popisek sedí v tom místě; jakmile
+   se vyroluje hláška, uhne jí (schová ho JS).
+   Lišta je zároveň o kus nižší — svislé odsazení bylo předimenzované.
+   ============================================================ */
+.timer-note{
+  flex:1 1 auto;
+  min-width:0;
+  font-size:.82rem;
+  line-height:1.3;
+  color:var(--ink-muted);
+}
+.timer-note[hidden]{display:none !important;}
+.summary[data-state="filled"] .timer-note{display:none;}
+@media (max-width:639px){
+  /* Prázdný stav měl svislé odsazení 16 px, na tak malý obsah moc.
+     Musí to být i na .summary[data-state], jinak to pravidlo výš přebije. */
+  .summary-inner,
+  .summary[data-state="empty"] .summary-inner{padding:11px 14px;}
+  .timer-note{font-size:.78rem;}
+}
+@media (max-width:359px){
+  .timer-note{font-size:.72rem;}
+}

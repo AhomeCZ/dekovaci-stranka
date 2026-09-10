@@ -203,6 +203,9 @@ bez nabídky</button>
             <svg class="paw" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><use href="#i-paw"/></svg>
           </div>
         </div>
+        <!-- Popisek k odpočtu. Samotné číslo neřeklo, co vyprší.
+             Když se vyroluje hláška, popisek jí místo uvolní. -->
+        <span class="timer-note" id="timerNote">Zbývá do zalepení</span>
         <!-- Hláška se vyroluje, až když zákazník klepne na hlavní tlačítko
              s prázdným košíkem. Napevno tu nevisí, aby lištu nezvyšovala. -->
         <div class="summary-note" id="summaryNote" hidden>
@@ -784,6 +787,8 @@ function ukazPoznamku(){
   const note = document.getElementById('summaryNote');
   if (!note.hidden) return;
   note.hidden = false;
+  const lab = document.getElementById('timerNote');
+  if (lab) lab.hidden = true;
   requestAnimationFrame(() => note.classList.add('is-open'));
 }
 
