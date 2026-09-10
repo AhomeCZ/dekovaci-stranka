@@ -4257,3 +4257,12 @@ a,button{
   stroke:currentColor;
   fill:none;
 }
+
+/* Popisek hlavního tlačítka se láme tam, kde chceme. pre-line proto,
+   že text plní JS přes textContent — a zlom se projeví jen u znění,
+   které ho v sobě má, jednořádková znění zůstanou na řádku. */
+#ctaText{
+  white-space:pre-line;
+  line-height:1.15;
+  text-align:center;
+}

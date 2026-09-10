@@ -232,7 +232,8 @@ bez nabídky</button>
 bez nabídky</button>
         </p>
         <button class="cta" id="cta" type="button">
-        <span id="ctaText">Vyberte něco navíc</span>
+        <span id="ctaText">Přidejte něco
+pro radost</span>
         <svg aria-hidden="true"><use href="#i-chev"/></svg>
         </button>
       </div>
@@ -473,7 +474,7 @@ function refresh(){
   count = [...cart.values()].reduce((sum, qty) => sum + qty, 0);
   total = [...cart.entries()].reduce((sum, [index, qty]) => sum + products[index].p * qty, 0);
   totalEl.textContent = total + ' Kč';
-  ctaText.textContent = vyprselo ? 'Pokračovat' : (count ? 'Přibalit a zaplatit' : 'Vyberte něco navíc');
+  ctaText.textContent = vyprselo ? 'Pokračovat' : (count ? 'Přibalit a zaplatit' : 'Přidejte něco\npro radost');
   /* S plným košíkem lišta potřebuje místo na cenu, hláška jde pryč. */
   if (count) schovejPoznamku();
   summary.dataset.state = count ? 'filled' : 'empty';
