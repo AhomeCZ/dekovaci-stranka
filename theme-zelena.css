@@ -292,6 +292,7 @@ html #hideOfferBtn:focus-visible{
   background-color:#fff!important;
   border-color:var(--z-secondary)!important;
   color:var(--z-accent)!important;
+  height: 44px;
 }
 
 /* -------------------------------------------------------------
@@ -389,4 +390,19 @@ html [data-stav="zamitnuto"] .state-icon{
 .tip-copy .tip-lead,
 .tip-copy .tip-sub{
   white-space:pre-line!important;
+}
+
+/* -------------------------------------------------------------
+   14) Urgence odpočtu v posledních 5 minutách
+   Blok 9 výš barví hodiny i proužek zeleně přes !important,
+   takže se červená musí přebít tady, jinak se neprojeví.
+   ------------------------------------------------------------- */
+html .timer.is-urgent .timer-face .clock,
+html .timer.is-urgent .timer-face .paw{
+  color:#C0392B!important;
+}
+html .timer.is-urgent::after{
+  background:linear-gradient(90deg,
+    #C0392B 0 calc(var(--progress,1) * 100%),
+    var(--line) calc(var(--progress,1) * 100%) 100%)!important;
 }

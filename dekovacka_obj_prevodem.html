@@ -906,8 +906,8 @@ setInterval(() => {
   ring.style.strokeDashoffset = ARC * (1 - left / START);
   timer.style.setProperty('--progress', left / START);
 
-  timer.classList.toggle('is-urgent',   left <= 60 && left > 0);
-  timer.classList.toggle('is-critical', left <= 10 && left > 0);
+  timer.classList.toggle("is-urgent",   left <= 300 && left > 0);
+  timer.classList.toggle("is-critical", left <= 60 && left > 0);
   if (left === 0){
     timer.classList.add('is-done');
     timer.classList.remove('is-urgent','is-critical');

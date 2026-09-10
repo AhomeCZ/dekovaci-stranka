@@ -4273,3 +4273,24 @@ a,button{
    teprve pak odchod. */
 .state-actions .state-alt{order:2;}
 .state-actions .state-secondary{order:3;}
+
+/* ============================================================
+   Urgence odpočtu — poslední 5 minut
+   ------------------------------------------------------------
+   is-urgent naskočí na 5:00, is-critical na poslední minutu.
+   Pulzování je tady, barvy musí být i v theme-zelena.css —
+   proužek pod odpočtem si tam téma přebíjí přes !important.
+   ============================================================ */
+@keyframes odpocet-puls{
+  0%,100%{transform:scale(1);}
+  50%{transform:scale(1.08);}
+}
+.timer.is-urgent{animation:odpocet-puls 1.1s ease-in-out infinite !important;}
+.timer.is-critical{animation:odpocet-puls .55s ease-in-out infinite !important;}
+.timer.is-urgent .timer-face .clock,
+.timer.is-urgent .timer-face .paw{color:#C0392B;}
+.timer.is-urgent::after{
+  background:linear-gradient(90deg,
+    #C0392B 0 calc(var(--progress,1) * 100%),
+    var(--line) calc(var(--progress,1) * 100%) 100%);
+}
